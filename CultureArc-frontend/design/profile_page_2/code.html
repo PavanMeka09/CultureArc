@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Profile Page - CultureArc</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#8a9eff",
+            "background-light": "#f6f6f8",
+            "background-dark": "#0f111a",
+            "surface-dark": "#151823",
+          },
+          fontFamily: {
+            "display": ["Inter"]
+          },
+          borderRadius: {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          boxShadow: {
+            'soft': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(255, 255, 255, 0.05) inset',
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+  </style>
+</head>
+<body class="font-display bg-background-dark text-slate-300">
+<div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+<div class="flex min-h-screen">
+<aside class="w-64 flex-shrink-0 bg-surface-dark/50 border-r border-slate-800/60 p-6 flex flex-col justify-between">
+<div class="flex flex-col gap-10">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-3xl">public</span>
+<h2 class="text-xl font-bold text-white">CultureArc</h2>
+</div>
+<nav class="flex flex-col gap-4">
+<div class="flex flex-col gap-2">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary/20 text-primary transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+<p class="text-sm font-semibold leading-normal">Dashboard</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-slate-800/60 text-slate-400 hover:text-slate-200 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">bookmark</span>
+<p class="text-sm font-medium leading-normal">Saved Artifacts</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-slate-800/60 text-slate-400 hover:text-slate-200 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">photo_library</span>
+<p class="text-sm font-medium leading-normal">Collections</p>
+</a>
+</div>
+</nav>
+</div>
+<div class="flex flex-col gap-2">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-slate-800/60 text-slate-400 hover:text-slate-200 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">settings</span>
+<p class="text-sm font-medium leading-normal">Settings</p>
+</a>
+<div class="border-t border-slate-800/60 my-2"></div>
+<div class="flex gap-4 p-2 items-center">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="Profile picture of Eleanor Vance" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuD7sSjLoOODEaT_2qJXrLs-FXHqmQzW-N1ylR5H0RhwPJ89r_MGHfBN0W1s4vUrA-Sf_MHFpGLV_ueBb4menSg1BPjfsHMFMB_8Xmk8eQxyqHEjNB0XnWJSsq8y3X5Q2urhV2Od-cgHPvpVDOyFyNTiCUmJAChv8KBAAEZ92fun1swcdjfli2sevlw48sk_jVk6ePDWmlKAI6mlE_oSlul0gRLM6hHpQ-a4RLG0tgKgTcRK090y18ts8QlGKNE5SuKidimz5vnn21bc");'></div>
+<div class="flex flex-col">
+<h1 class="text-white text-sm font-medium leading-normal">Eleanor Vance</h1>
+<p class="text-slate-400 text-xs font-normal leading-normal">Archaeologist</p>
+</div>
+</div>
+</div>
+</aside>
+<main class="flex-1 p-10">
+<div class="layout-content-container flex flex-col w-full mx-auto max-w-6xl">
+<header class="flex p-4 @container mb-8">
+<div class="flex w-full flex-col gap-6 @[520px]:flex-row @[520px]:justify-between @[520px]:items-center">
+<div class="flex gap-6 items-center">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full h-28 w-28 ring-4 ring-slate-800/50" data-alt="Profile picture of Eleanor Vance, an archaeologist" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBnDZRGZNASYRggBlVHwnGmOuaRml0psIr8Zlv74mAjk9CHGi2Qj48UpbP3_m3wMNnYEDysoNPWQn1jp6RMXslwGWKMrfxHHpn9WSEsVf48EhbYZl9Cp1G2J0U_orGnyhAGTzOvm4Dd4dgFD8--34Buch3zAgnP5sIHyouLSmlfiOXvVOFmj1UGkh63Zcd8JLGgL9tycbWY1uEcL-E_ddHxqp_r52BT5_zZ5hzx70yTMjThgwYqN397EsTLluOchJDSlPKofrGYpxR-");'></div>
+<div class="flex flex-col justify-center gap-2">
+<p class="text-white text-3xl font-bold leading-tight tracking-tight">Eleanor Vance</p>
+<p class="text-slate-400 text-base font-normal leading-normal">Lover of ancient civilizations and forgotten lore.</p>
+</div>
+</div>
+</div>
+</header>
+<section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
+<div class="flex flex-col gap-2 rounded-xl p-6 bg-surface-dark shadow-soft">
+<p class="text-slate-400 text-sm font-medium leading-normal">Saved Artifacts</p>
+<p class="text-white tracking-tight text-4xl font-bold leading-tight">128</p>
+</div>
+<div class="flex flex-col gap-2 rounded-xl p-6 bg-surface-dark shadow-soft">
+<p class="text-slate-400 text-sm font-medium leading-normal">Collections</p>
+<p class="text-white tracking-tight text-4xl font-bold leading-tight">12</p>
+</div>
+<div class="flex flex-col gap-2 rounded-xl p-6 bg-surface-dark shadow-soft">
+<p class="text-slate-400 text-sm font-medium leading-normal">Contributions</p>
+<p class="text-white tracking-tight text-4xl font-bold leading-tight">4</p>
+</div>
+</section>
+<nav class="pb-3 mt-8">
+<div class="flex border-b border-slate-800/60 px-4 gap-8">
+<a class="flex flex-col items-center justify-center border-b-2 border-b-primary text-primary pb-3" href="#">
+<p class="text-sm font-semibold leading-normal tracking-wide">Saved Artifacts</p>
+</a>
+<a class="flex flex-col items-center justify-center border-b-2 border-b-transparent text-slate-400 pb-3 hover:text-primary transition-colors duration-200" href="#">
+<p class="text-sm font-semibold leading-normal tracking-wide">Collections</p>
+</a>
+</div>
+</nav>
+<section class="grid grid-cols-[repeat(auto-fill,minmax(240px,1fr))] gap-8 p-4 mt-4">
+<div class="flex flex-col gap-4 group">
+<div class="w-full bg-center bg-no-repeat aspect-[3/4] bg-cover rounded-lg overflow-hidden transform group-hover:scale-105 transition-transform duration-300 ease-in-out" data-alt="A fragment of a Minoan fresco showing a leaping dolphin" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDdjJxtKok7Pt7s6KPRhrYqiFSqEK_Dy50aR-eCKQoBTi04_ZMcw5J895kdkIXAtrUM6w_VX9ONGzBn_QMU0Cb7OFctBd8XSI1YhWj4_8CEsRqNOeB27zRRSbLMfYX2zlZNJaFJ5Sw43SAS2SAnMFQMvIxDt_aTXHVjDjMH6kqMmEPHp7LH9eU_A8n23jqv8u9dgk3__7v3xqv7ntaby3NlmTcgteSl9djABbGPy3-HGJWq8-3IAXJjMMD7h91D0sA-FvPGdgag0W5Q");'></div>
+<div class="flex flex-col">
+<p class="text-white text-base font-medium leading-normal">Minoan Fresco Fragment</p>
+<p class="text-slate-400 text-sm font-normal leading-normal">Crete, 1600 BCE</p>
+</div>
+</div>
+<div class="flex flex-col gap-4 group">
+<div class="w-full bg-center bg-no-repeat aspect-[3/4] bg-cover rounded-lg overflow-hidden transform group-hover:scale-105 transition-transform duration-300 ease-in-out" data-alt="An ancient Roman glass vial with iridescent colors" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuB21OMEvi6VmmvED7uH62ZHF1rRL2WrnOmGvjDhH8gSJ3zmttxmnaKL-KP4LG1y3_jckGPAEatbgz9d5azjk9_TGwNNu2qcclGePijepCb2R8CrYPHSvFZnSfrPsFxbdzUNC9-1Pat0T4xdIBsYtb-D9hUVkdIbb1MW-tdfOZNnSaUvSPCOK18HuGUEV_Td7GbebcrE5WT5vvwAZqV8RodzIJ8ecfUltCXyc9XUf8S3ZWObZapW3UsXJGUvUbeHTWpO29GeMR_1EIAQ");'></div>
+<div class="flex flex-col">
+<p class="text-white text-base font-medium leading-normal">Roman Glass Vial</p>
+<p class="text-slate-400 text-sm font-normal leading-normal">Syria, 2nd Century CE</p>
+</div>
+</div>
+<div class="flex flex-col gap-4 group">
+<div class="w-full bg-center bg-no-repeat aspect-[3/4] bg-cover rounded-lg overflow-hidden transform group-hover:scale-105 transition-transform duration-300 ease-in-out" data-alt="An intricately decorated Egyptian Canopic Jar" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAz2wzEdU6Ij10eN1qupEeENPObGnzqvQCieHc01YoKizw470_8WKD2l48fGsPsuvSg2KOyqCopFaXLRI4uv-KCsHG5GDGR4fVWQsEGtWCEtZ0dYF7zZrvE80a60Bk4z07QiOmuGdMqw32VuZSvufo2Lj3xTWBBi8wy6h1Zia4S6Xs6ysAVUbBHl2_9Ewh1rH0fjh4FUyjPaPfUr6AqzcJ6NPuw7qZI70SLmKbSG_wU7acRteGgwI0urOZqX4j6Gh3O6VE36HS9z24X");'></div>
+<div class="flex flex-col">
+<p class="text-white text-base font-medium leading-normal">Egyptian Canopic Jar</p>
+<p class="text-slate-400 text-sm font-normal leading-normal">Thebes, 1350 BCE</p>
+</div>
+</div>
+<div class="flex flex-col gap-4 group">
+<div class="w-full bg-center bg-no-repeat aspect-[3/4] bg-cover rounded-lg overflow-hidden transform group-hover:scale-105 transition-transform duration-300 ease-in-out" data-alt="A replica of the Aztec Sun Stone" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCNOqZhLo81hr05S_21S0nzpzoODeTKWrdzqvF3jCCokj-302awplxg6Rue7512iMWuSsj5ju6iCJjG4hCLlbZJrm-_qfJjL5wpWLL_wlFLZ8pFhwq7pyoLxleyxlaw8mybah30mP87DgII0cTAwG9RhuOswYj55Z3ezVsHPXdaFoevyrr_ZG8AcRoL-jPvUpRn9WQFqjjX2nTS_JrPgWRhDNAZbabMi0DKxBPAjXU8a2ZS8NCnax1qSHJ6SE8De_f-hkE0m4CKPF8o");'></div>
+<div class="flex flex-col">
+<p class="text-white text-base font-medium leading-normal">Aztec Sun Stone Replica</p>
+<p class="text-slate-400 text-sm font-normal leading-normal">Tenochtitlan, 15th Century</p>
+</div>
+</div>
+<div class="flex flex-col gap-4 group">
+<div class="w-full bg-center bg-no-repeat aspect-[3/4] bg-cover rounded-lg overflow-hidden transform group-hover:scale-105 transition-transform duration-300 ease-in-out" data-alt="A detailed Viking silver brooch with intricate carvings" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCZYcnY7VM7X7o95LRF1xzXxrA6a0m5Z2HqK0Gda62Z6Ec6ZeGyWJTwl-eISV5ZBaNBaHlnaH4A3IGPkiEFRTz2vPsmVKxMX_m8BEii5PfGIqJyCuxWjciSLJiy0gxXESx7GJEEk6GHFTa5mO26WMW9oJfgHZIAeXLm_BixikUPdjcM1dBemU6r3B7ECPuyAIocYcfYAd3CKsgcItyxOUI_ynsYnlP6m_2AUyVUqJ9AxBvKUCKE_jtBdq6PNMMgzUmycBUDNKA4LHaB");'></div>
+<div class="flex flex-col">
+<p class="text-white text-base font-medium leading-normal">Viking Silver Brooch</p>
+<p class="text-slate-400 text-sm font-normal leading-normal">Gotland, 9th Century CE</p>
+</div>
+</div>
+<div class="flex flex-col gap-4 group">
+<div class="w-full bg-center bg-no-repeat aspect-[3/4] bg-cover rounded-lg overflow-hidden transform group-hover:scale-105 transition-transform duration-300 ease-in-out" data-alt="A close-up of a Sumerian Cuneiform Tablet" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDIdm7vFcNrEkoergO_yOPh7mO2cFoMO6sx_U3OfDr7vRYfo4pl7JridvZyPxlNnJyj4rwvg2k1vrwVGltaBIY7-kKpfzD-R8SAttYIW4f89B5Hyp2c-FRf8TTYpUxFnny9w_dAPHrSHDgskPFTPBgfR2cNAHzx5efq-hsZ33tEjfP-DxYH1TJQTQejNWc0sbD7HvAmRQGBBomYauAUlrO3ZbJPIiMDA0PE9OdrF0qYQexpzrd9pFgW3ydTDLNYY087DEgOc6tyf3Yw");'></div>
+<div class="flex flex-col">
+<p class="text-white text-base font-medium leading-normal">Sumerian Cuneiform Tablet</p>
+<p class="text-slate-400 text-sm font-normal leading-normal">Ur, 2100 BCE</p>
+</div>
+</div>
+</section>
+</div>
+</main>
+</div>
+</div>
+</body></html>

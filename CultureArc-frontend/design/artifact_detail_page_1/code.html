@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Artifact Detail Page - CultureArc</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#1430b8",
+              "background-light": "#f6f6f8",
+              "background-dark": "#111421",
+            },
+            fontFamily: {
+              "display": ["Inter", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="font-display bg-background-light dark:bg-background-dark text-[#2D2D2D] dark:text-gray-200">
+<div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+<div class="layout-container flex h-full grow flex-col">
+<header class="sticky top-0 z-10 w-full bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-sm border-b border-gray-200 dark:border-gray-800">
+<div class="flex items-center justify-between whitespace-nowrap px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto h-16">
+<div class="flex items-center gap-4">
+<svg class="text-primary size-6" fill="currentColor" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M4 42.4379C4 42.4379 14.0962 36.0744 24 41.1692C35.0664 46.8624 44 42.2078 44 42.2078L44 7.01134C44 7.01134 35.068 11.6577 24.0031 5.96913C14.0971 0.876274 4 7.27094 4 7.27094L4 42.4379Z"></path>
+</svg>
+<h2 class="text-[#2D2D2D] dark:text-white text-lg font-bold leading-tight tracking-[-0.015em]">CultureArc</h2>
+</div>
+<div class="hidden md:flex items-center gap-8">
+<a class="text-[#2D2D2D] dark:text-gray-300 hover:text-primary dark:hover:text-white text-sm font-medium leading-normal transition-colors" href="#">Explore</a>
+<a class="text-[#2D2D2D] dark:text-gray-300 hover:text-primary dark:hover:text-white text-sm font-medium leading-normal transition-colors" href="#">Collections</a>
+<a class="text-[#2D2D2D] dark:text-gray-300 hover:text-primary dark:hover:text-white text-sm font-medium leading-normal transition-colors" href="#">About</a>
+</div>
+<button class="flex cursor-pointer items-center justify-center rounded-lg h-10 w-10 text-[#2D2D2D] dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">
+<span class="material-symbols-outlined text-xl">search</span>
+</button>
+</div>
+</header>
+<main class="flex flex-1 justify-center py-8 sm:py-12 lg:py-16">
+<div class="layout-content-container flex flex-col w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+<div class="flex flex-wrap gap-2 mb-8">
+<a class="text-gray-500 dark:text-gray-400 hover:text-primary dark:hover:text-white text-sm font-medium leading-normal transition-colors" href="#">Home</a>
+<span class="text-gray-400 dark:text-gray-500 text-sm font-medium leading-normal">/</span>
+<a class="text-gray-500 dark:text-gray-400 hover:text-primary dark:hover:text-white text-sm font-medium leading-normal transition-colors" href="#">Collections</a>
+<span class="text-gray-400 dark:text-gray-500 text-sm font-medium leading-normal">/</span>
+<a class="text-gray-500 dark:text-gray-400 hover:text-primary dark:hover:text-white text-sm font-medium leading-normal transition-colors" href="#">Bronze Age</a>
+<span class="text-gray-400 dark:text-gray-500 text-sm font-medium leading-normal">/</span>
+<span class="text-[#2D2D2D] dark:text-white text-sm font-medium leading-normal">Vinča Idol</span>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-2 lg:gap-16">
+<div class="w-full">
+<div class="w-full bg-center bg-no-repeat bg-cover flex flex-col justify-end overflow-hidden rounded-xl min-h-[400px] md:min-h-[500px] lg:min-h-[600px] shadow-sm" data-alt="A detailed, high-resolution photograph of the Vinča Idol, a terracotta figurine from the Neolithic era, shown against a neutral studio background." style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBdWa-PR_pGDL1QIWE6SzWxGktvECzJlSavw9LyeM0jnlY2giQTQ-b_V4it5W5HjdzmcIEFc5VYQsWV61LgB5DNudM-iqJq6GVzCIyL2ntyZGEx0FCwOPB4kKkPjMvGo4NIBKUGimgxj06iFMQq4RexMdd9wHNTlXJnfy-MvliEIVab8ktthp8HOSftAlGzy9bzf76l_E1ab1B7r0hwGzQsHuDZx8MabhORzz2_suSDDKd610BLx9LJzC3mhsOyjIyyRiZ92OV9Ir_e");'></div>
+</div>
+<div class="flex flex-col pt-8 lg:pt-0">
+<h1 class="text-[#2D2D2D] dark:text-white text-4xl lg:text-5xl font-black leading-tight tracking-[-0.033em]">Vinča Idol</h1>
+<div class="mt-8 border-t border-gray-200 dark:border-gray-700">
+<div class="grid grid-cols-[1fr_2fr] gap-x-6 py-5 border-b border-gray-200 dark:border-gray-700">
+<p class="text-gray-500 dark:text-gray-400 text-sm font-medium">Period</p>
+<p class="text-[#2D2D2D] dark:text-gray-200 text-sm font-medium">Neolithic Era</p>
+</div>
+<div class="grid grid-cols-[1fr_2fr] gap-x-6 py-5 border-b border-gray-200 dark:border-gray-700">
+<p class="text-gray-500 dark:text-gray-400 text-sm font-medium">Culture</p>
+<p class="text-[#2D2D2D] dark:text-gray-200 text-sm font-medium">Vinča Culture</p>
+</div>
+<div class="grid grid-cols-[1fr_2fr] gap-x-6 py-5 border-b border-gray-200 dark:border-gray-700">
+<p class="text-gray-500 dark:text-gray-400 text-sm font-medium">Region of Origin</p>
+<p class="text-[#2D2D2D] dark:text-gray-200 text-sm font-medium">Danube River Basin</p>
+</div>
+<div class="grid grid-cols-[1fr_2fr] gap-x-6 py-5">
+<p class="text-gray-500 dark:text-gray-400 text-sm font-medium">Materials</p>
+<p class="text-[#2D2D2D] dark:text-gray-200 text-sm font-medium">Terracotta, Pigment</p>
+</div>
+</div>
+<p class="mt-6 text-base leading-relaxed text-gray-600 dark:text-gray-300">This terracotta figurine is a prime example of the Vinča culture's sophisticated artistry. Characterized by its abstract facial features and geometric incisions, it likely held significant ritual or spiritual importance. The artifact provides invaluable insight into the symbolic world of one of Europe's earliest and most influential Neolithic societies.</p>
+<div class="mt-10 flex flex-wrap gap-4">
+<button class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-11 bg-primary text-white gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 px-6 hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined text-xl">bookmark_add</span>
+<span>Add to Collection</span>
+</button>
+<button class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-11 bg-gray-200 dark:bg-gray-800 text-[#2D2D2D] dark:text-gray-200 gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 px-6 hover:bg-gray-300 dark:hover:bg-gray-700 transition-colors">
+<span class="material-symbols-outlined text-xl">share</span>
+<span>Share</span>
+</button>
+</div>
+</div>
+</div>
+<div class="mt-16 sm:mt-20 lg:mt-24 pt-12 border-t border-gray-200 dark:border-gray-700">
+<h2 class="text-[#2D2D2D] dark:text-white text-3xl font-bold tracking-tight">You Might Also Like</h2>
+<div class="mt-8 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
+<div class="group relative flex flex-col">
+<div class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 dark:bg-gray-800">
+<img class="h-full w-full object-cover object-center transition-transform duration-300 group-hover:scale-105" data-alt="An ancient clay pot with intricate patterns." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBpoV8hCF87HPFIyfltRUJhfdy-XsyMb7VA39CNh8t9-Gf75-AmRqJS7KZBDBw3IBM8uQNapgd_1savbcMJ0KU5R_6Wwz5rckoA9Mf3nfCg01pV_nCvwaHtK_fGk4e20oK-1_zu-Zj4n7v3qlqF6cPE42YzSeBA2i7LojtjqsvoCJupQ0yOQrNigbmJROgIis4Kqhl7nDR8ieSNiZVT2o9sf81G7QOS_mDsntxWbkQkhV4Rxrngd35WPsxqGeWNu-NtVzpM7y_jwO5C"/>
+</div>
+<div class="mt-4 flex flex-col">
+<h3 class="text-sm font-bold text-[#2D2D2D] dark:text-white">
+<a class="hover:text-primary dark:hover:text-primary/80" href="#"><span aria-hidden="true" class="absolute inset-0"></span>Bell Beaker Vessel</a>
+</h3>
+<p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Bell Beaker Culture</p>
+</div>
+</div>
+<div class="group relative flex flex-col">
+<div class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 dark:bg-gray-800">
+<img class="h-full w-full object-cover object-center transition-transform duration-300 group-hover:scale-105" data-alt="A Roman silver denarius coin." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB98Q5kkMH0ysFTk2XEpf8Cvn_8gdrn-z0wrgnTjtpV4M-x8CMHpYqQ1yst-6HCshIGDOSFzBepvyJdO82QiLZCXLGqwTq004o-WS_MampEX6RfWmZBIah4y-GdS-DOuUS6_SzhnDPr4m0eSEWPHJMlzqGb4JZWaBW976D6MI2WFkDPx9KT-zCj2shE_B4m9DmEC8LlDoNaNg5UKCBw_WM5Zl4eJ9FXT_QYoFlkWVNVw-JNK01CCx53K4Vdt6GGkgd6klu-kwJl6zvG"/>
+</div>
+<div class="mt-4 flex flex-col">
+<h3 class="text-sm font-bold text-[#2D2D2D] dark:text-white">
+<a class="hover:text-primary dark:hover:text-primary/80" href="#"><span aria-hidden="true" class="absolute inset-0"></span>Silver Denarius</a>
+</h3>
+<p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Roman Empire</p>
+</div>
+</div>
+<div class="group relative flex flex-col">
+<div class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 dark:bg-gray-800">
+<img class="h-full w-full object-cover object-center transition-transform duration-300 group-hover:scale-105" data-alt="A Bronze Age sword with a leaf-shaped blade." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBdEavGLtfT5xKPp_9HamzilaXhgBAwPt03j9Tv-rMaMB336ODifexrTiPMpHLPubK6jxTxDhLX4cEgKDkCoXAF1H4pHnuUCOZnq4I40KTspl-vMDBDv5wzfPGHJ73XJ0TlNaKPONHGpkWTvclMaeLvbWWQYE7SnJQbY0vR2TkC8SYJzhVnE95l0NjDTLOIMOYSngHCnT8dZ5EFjbdtTVeDFbECEkKTWLqGUt-WcBmObgFjMh9c5Ln3wH2GKiaOhRX6aeIO2tIE6fyt"/>
+</div>
+<div class="mt-4 flex flex-col">
+<h3 class="text-sm font-bold text-[#2D2D2D] dark:text-white">
+<a class="hover:text-primary dark:hover:text-primary/80" href="#"><span aria-hidden="true" class="absolute inset-0"></span>Ewart Park Sword</a>
+</h3>
+<p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Bronze Age</p>
+</div>
+</div>
+<div class="group relative flex flex-col">
+<div class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 dark:bg-gray-800">
+<img class="h-full w-full object-cover object-center transition-transform duration-300 group-hover:scale-105" data-alt="An ornate Celtic fibula brooch." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCa5vyaZxg8NyV8F21cqrv9IsBKckNbZBxXi9flyx3HMS5eSsfknn9sFp7EK_Gy9zIOVvXROh24fdKwexz8kiJ-PEaVwQ3jju40mLRTZ7m_o8SKNtPCoTAdWMpXM9aTUEzXuWbMnc5OUau6jZPF_c3ByuN5iY_5jxwp9rclR0eyhVIQGAoT6EbHX47u2zuZTzcA1d-rMRlc46Mqn9DRn-WtPJBqqXrOlqukNzJMLBrl43WZhpzMpHha54NrluVvD45i5miB9VX4Of9P"/>
+</div>
+<div class="mt-4 flex flex-col">
+<h3 class="text-sm font-bold text-[#2D2D2D] dark:text-white">
+<a class="hover:text-primary dark:hover:text-primary/80" href="#"><span aria-hidden="true" class="absolute inset-0"></span>Celtic Fibula</a>
+</h3>
+<p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Iron Age</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</div>
+</body></html>

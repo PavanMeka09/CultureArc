@@ -1,0 +1,126 @@
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { Search, ChevronDown } from 'lucide-react';
+import api from '../api/axios';
+
+const ExplorePage = () => {
+    const [artifacts, setArtifacts] = useState([]);
+    const [keyword, setKeyword] = useState('');
+    const [category, setCategory] = useState('');
+    const [page, setPage] = useState(1);
+    const [pages, setPages] = useState(1);
+
+    // Debounce search to avoid too many requests
+    useEffect(() => {
+        const fetchArtifacts = async () => {
+            const params = {
+                keyword,
+                category,
+                page,
+            };
+
+            try {
+                const { data } = await api.get('/artifacts', { params });
+                if (page === 1) {
+                    setArtifacts(data.artifacts || []);
+                } else {
+                    setArtifacts(prev => [...prev, ...(data.artifacts || [])]);
+                }
+                setPages(data.pages || 1);
+            } catch (error) {
+                console.error('Failed to fetch artifacts', error);
+            }
+        };
+
+        const timeoutId = setTimeout(() => {
+            fetchArtifacts();
+        }, 500); // 500ms debounce
+
+        return () => clearTimeout(timeoutId);
+    }, [keyword, category, page]);
+
+    useEffect(() => {
+        setPage(1);
+    }, [keyword, category]);
+
+    return (
+        <div className="flex flex-col flex-1 py-10">
+            {/* PageHeading */}
+            <div className="flex flex-wrap justify-between gap-3 p-4">
+                <div className="flex min-w-72 flex-col gap-3">
+                    <p className="text-slate-900 dark:text-white text-4xl font-black leading-tight tracking-[-0.033em]">Explore Artifacts</p>
+                    <p className="text-gray-500 dark:text-gray-400 text-base font-normal leading-normal">Discover cultural heritage from around the world.</p>
+                </div>
+            </div>
+            {/* SearchBar & Filters */}
+            <div className="flex flex-col md:flex-row items-center gap-4 px-4 py-3">
+                {/* SearchBar */}
+                <div className="w-full flex-grow">
+                    <label className="flex flex-col w-full h-12">
+                        <div className="flex w-full flex-1 items-stretch rounded-lg h-full bg-white dark:bg-background-dark shadow-sm ring-1 ring-slate-200 dark:ring-slate-800 transition-all focus-within:ring-2 focus-within:ring-primary/50">
+                            <div className="text-gray-500 dark:text-gray-400 flex items-center justify-center pl-4">
+                                <Search size={20} />
+                            </div>
+                            <input
+                                value={keyword}
+                                onChange={(e) => setKeyword(e.target.value)}
+                                className="flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-r-lg text-slate-900 dark:text-white focus:outline-0 border-none bg-transparent h-full placeholder:text-gray-500 dark:placeholder:text-gray-400 px-4 pl-2 text-base font-normal leading-normal"
+                                placeholder="Search artifacts, cultures, materials..."
+                            />
+                        </div>
+                    </label>
+                </div>
+                {/* Filters */}
+                <div className="flex gap-3 overflow-x-auto w-full md:w-auto pb-2 md:pb-0">
+                    <select
+                        value={category}
+                        onChange={(e) => setCategory(e.target.value)}
+                        className="flex h-10 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-4 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors text-slate-900 dark:text-gray-300 text-sm font-medium leading-normal cursor-pointer appearance-none outline-none focus:ring-2 focus:ring-primary/20"
+                    >
+                        <option value="">All Categories</option>
+                        <option value="Pottery">Pottery</option>
+                        <option value="Sculpture">Sculpture</option>
+                        <option value="Art">Art</option>
+                        <option value="Jewelry">Jewelry</option>
+                        <option value="Tool">Tool</option>
+                        <option value="Writing">Writing</option>
+                        <option value="Monument">Monument</option>
+                    </select>
+                </div>
+            </div>
+            {/* ImageGrid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 p-4">
+                {artifacts.length > 0 ? (
+                    artifacts.map((item) => (
+                        <div key={item._id} className="group relative overflow-hidden rounded-xl bg-white dark:bg-card-dark shadow-sm hover:shadow-md transition-all">
+                            <Link to={`/artifact/${item._id}`}>
+                                <div className="bg-cover bg-center flex flex-col justify-end aspect-[3/4] transition-transform duration-300 ease-in-out group-hover:scale-105" style={{ backgroundImage: `url("${item.imageUrl}")` }}>
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out"></div>
+                                    <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-4 group-hover:translate-y-0 transition-transform duration-300 ease-in-out">
+                                        <p className="text-white text-lg font-bold leading-tight line-clamp-2">{item.title}</p>
+                                        <p className="text-gray-300 text-sm mt-1">{item.era}</p>
+                                    </div>
+                                </div>
+                            </Link>
+                        </div>
+                    ))
+                ) : (
+                    <p className="px-4 text-slate-500">Loading artifacts...</p>
+                )}
+            </div>
+            {/* Pagination/Load More Button */}
+            {page < pages && (
+                <div className="flex justify-center p-4 mt-8">
+                    <button
+                        onClick={() => setPage(prev => prev + 1)}
+                        className="flex min-w-[120px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-6 bg-primary/10 text-primary dark:bg-primary/20 dark:text-accent text-sm font-bold leading-normal tracking-[0.015em] hover:bg-primary/20 dark:hover:bg-primary/30 transition-colors"
+                    >
+                        <span className="truncate">Load More</span>
+                    </button>
+                </div>
+            )}
+        </div>
+    );
+};
+
+export default ExplorePage;

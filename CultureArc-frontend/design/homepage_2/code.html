@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CultureArc - The Archive of Our Shared Story</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#4A6D7C",
+              "background-light": "#F8F8F6",
+              "background-dark": "#0D0F17",
+              "text-light": "#333333",
+              "text-dark": "#E0E0E0",
+              "accent": "#B88A76",
+            },
+            fontFamily: {
+              "display": ["Inter", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "8px", "lg": "10px", "xl": "12px", "full": "9999px"},
+            boxShadow: {
+              'soft-glow': '0 0 25px 5px rgba(184, 138, 118, 0.15)',
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            font-size: 20px;
+        }
+        .hero-pattern {
+            background-image: radial-gradient(circle at 50% 0, rgba(184, 138, 118, 0.05) 0%, transparent 40%), radial-gradient(circle at 50% 100%, rgba(74, 109, 124, 0.08) 0%, transparent 40%);
+        }
+    </style>
+</head>
+<body class="bg-background-dark font-display text-text-dark">
+<div class="relative flex min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+<div class="layout-container flex h-full grow flex-col">
+<div class="flex flex-1 justify-center">
+<div class="layout-content-container flex flex-col w-full max-w-6xl flex-1 px-4 sm:px-6 lg:px-8">
+<header class="flex items-center justify-between whitespace-nowrap py-6">
+<div class="flex items-center gap-3">
+<div class="size-6 text-accent">
+<svg fill="currentColor" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M4 42.4379C4 42.4379 14.0962 36.0744 24 41.1692C35.0664 46.8624 44 42.2078 44 42.2078L44 7.01134C44 7.01134 35.068 11.6577 24.0031 5.96913C14.0971 0.876274 4 7.27094 4 7.27094L4 42.4379Z"></path>
+</svg>
+</div>
+<h2 class="text-text-dark text-xl font-bold tracking-tight">CultureArc</h2>
+</div>
+<nav class="hidden md:flex flex-1 justify-center items-center gap-8">
+<a class="text-text-dark text-sm font-medium hover:text-accent" href="#">Explore</a>
+<a class="text-text-dark text-sm font-medium hover:text-accent" href="#">Collections</a>
+<a class="text-text-dark text-sm font-medium hover:text-accent" href="#">Upload</a>
+</nav>
+<div class="flex items-center gap-4">
+<button class="flex h-10 w-10 cursor-pointer items-center justify-center overflow-hidden rounded-full bg-slate-800 text-text-dark">
+<span class="material-symbols-outlined">person</span>
+</button>
+</div>
+</header>
+<main class="flex flex-col flex-1">
+<div class="relative py-24 sm:py-32 flex flex-col items-center justify-center text-center">
+<div class="absolute inset-0 hero-pattern"></div>
+<div class="flex flex-col gap-4 max-w-2xl z-10">
+<h1 class="text-white text-4xl font-black leading-tight tracking-tighter sm:text-5xl lg:text-6xl">
+                                The Archive of Our Shared Story
+                            </h1>
+<p class="text-slate-400 text-base font-normal leading-relaxed sm:text-lg">
+                                A platform dedicated to preserving and discovering the world's cultural heritage.
+                            </p>
+</div>
+</div>
+<div class="px-4 pb-16 -mt-16 sm:-mt-20">
+<div class="max-w-2xl mx-auto">
+<label class="flex flex-col w-full">
+<div class="relative flex w-full flex-1 items-stretch rounded-lg h-14 bg-[#141824] shadow-lg shadow-black/20 transition-all duration-300 focus-within:shadow-soft-glow focus-within:ring-1 focus-within:ring-accent/50">
+<div class="text-slate-500 flex items-center justify-center pl-4">
+<span class="material-symbols-outlined">search</span>
+</div>
+<input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-text-dark focus:outline-0 focus:ring-0 border-none bg-transparent h-full placeholder:text-slate-500 px-4 pl-2 text-base font-normal leading-normal" placeholder="Search for artifacts, regions, or eras..." value=""/>
+</div>
+</label>
+</div>
+</div>
+<div class="pt-16 pb-4">
+<h2 class="text-white text-2xl sm:text-3xl font-bold tracking-tight px-4">Featured Collections</h2>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
+<div class="bg-cover bg-center flex flex-col rounded-lg justify-end p-4 aspect-[4/5] group transition-all duration-300 hover:shadow-2xl hover:shadow-black/30 hover:-translate-y-1" data-alt="An ornate piece of ancient Roman pottery against a soft, neutral background." style='background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0) 40%), url("https://lh3.googleusercontent.com/aida-public/AB6AXuBbnkMndZpTtLeuZbm_17WpPZri0JEgSoi1zs7rP6GiF-OYyWgdmkDW2SAUM3RoufnbyJfMrBOv9fPSM4T-Aoo8MN8VRGv9cpscvUyVP0yNTytkfgHDxK1--Z6Zesm3L_jmY5JO3Ur9nkG9HJahV8J4dgGplqf61QbbEod7ZOMVcg-XIVz5t7PGe2M6B-LH5vNwATFyxQxXD4_Kn1mkI-pahBaa82xgb3-mCbSqt47uDzcalxM4OklYlXlJOAITAPopa0FrJp7-cFGP");'>
+<p class="text-white text-lg font-bold w-full line-clamp-2 transform-gpu transition-transform duration-300 group-hover:translate-y-[-8px]">Ancient Roman Pottery</p>
+</div>
+<div class="bg-cover bg-center flex flex-col rounded-lg justify-end p-4 aspect-[4/5] group transition-all duration-300 hover:shadow-2xl hover:shadow-black/30 hover:-translate-y-1" data-alt="A vibrant Japanese Ukiyo-e woodblock print depicting a traditional scene." style='background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0) 40%), url("https://lh3.googleusercontent.com/aida-public/AB6AXuCcojyFJAiCm17JFyVnpquXglPg-wZzp3B8ptI7wCONeWDHJFwWIHH6GOConnBLMfpXyhiB1GaXHIEqdSt-O_B2mwebVdWTlRvGembKh8RPbcxSxFeR41K51U0bOLKabdtcTeMCPkA0wQUUWg8Zn2FjXBw3M6uMoB5tQ-IDDSbtZDww0OerzZSZXXv2PTGNx5jV4WS2-Pxaz7bTfZaahaGjkkNbIrm8hK86oSv0jLKR-fMG0VltDt3Uo8YVn88BI2vDj2sbhNvTJQfp");'>
+<p class="text-white text-lg font-bold w-full line-clamp-2 transform-gpu transition-transform duration-300 group-hover:translate-y-[-8px]">Japanese Ukiyo-e Prints</p>
+</div>
+<div class="bg-cover bg-center flex flex-col rounded-lg justify-end p-4 aspect-[4/5] group transition-all duration-300 hover:shadow-2xl hover:shadow-black/30 hover:-translate-y-1" data-alt="Detailed shot of intricate Mayan stone carvings and glyphs." style='background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0) 40%), url("https://lh3.googleusercontent.com/aida-public/AB6AXuAANO5rXVxCzl6AbJGuGLznxp8PM05BGjwnKB7hMDh0IwSjp2XRq6S-GdOOK_prCLuwW4Lx51yG9yX7mTgV3mktU5efNchUtCpD2PIu8xmfnrKCiNSwNwMPBoJfFHY9lGhWQDu7xcIYH2YgN7YLSl-_aXHH1IDhGEY0Nhskl8UUC7kioU1PDkisE7hlvpUk5I8bsVpo3skOj3iOaPfVVDbF9D_rtGtaVqxYGmqUpKN1B-o9z2-TKzuPQyOSg7CCuLoTwsg689dBAzBr");'>
+<p class="text-white text-lg font-bold w-full line-clamp-2 transform-gpu transition-transform duration-300 group-hover:translate-y-[-8px]">Mayan Glyphs &amp; Carvings</p>
+</div>
+<div class="bg-cover bg-center flex flex-col rounded-lg justify-end p-4 aspect-[4/5] group transition-all duration-300 hover:shadow-2xl hover:shadow-black/30 hover:-translate-y-1" data-alt="A close-up of ancient Egyptian hieroglyphs on a stone wall." style='background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0) 40%), url("https://lh3.googleusercontent.com/aida-public/AB6AXuBhTPw0YWnOQg030iU-W6fobY36qv5AOPUdosems3tFK1zCx_MCLtQFx5qIujvlJlwhmMWyOg_cLu5tEb2pZr2-iAtwK--ccXOIVML401DqJKNGFQnfyx8sRrb6jz-aR42Pl-na9jnwKGWVH2--Jd0G1ULDDdb6oQXJbwp1kS0bHQ2RSRnLglZSRgf1avffR4nDa5B1ukzX6ZMs5H2ifbCBWiX9hscZCv1LUHhg9LioTGg1UhvYaAAztxUU2S84O925qNZdb_bBCFsl");'>
+<p class="text-white text-lg font-bold w-full line-clamp-2 transform-gpu transition-transform duration-300 group-hover:translate-y-[-8px]">Egyptian Hieroglyphs</p>
+</div>
+<div class="bg-cover bg-center flex flex-col rounded-lg justify-end p-4 aspect-[4/5] group transition-all duration-300 hover:shadow-2xl hover:shadow-black/30 hover:-translate-y-1" data-alt="A weathered Viking runic stone standing in a grassy field." style='background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0) 40%), url("https://lh3.googleusercontent.com/aida-public/AB6AXuB8F7xc87bNYtR730ksb_eNqJh_El_aH7G1Vuznx5V72zoKXiNpixuqYd_SU7rJd2FkmdlTXzbnvFL14X6_klKA47b0YNX5nHatyc61ZijO2i5fmdQ2gkQpsaapaIu7ODQjqQ4emsxuli-EkS1XZD0B8pQwAiwc66Wt2bxBfBqfv-Xbe2deaUNTbv9ZZcaOLxKpd0-OSIOvpgJiIz2IdMCG7zF_yWEuK7wK9znnbbPrkIw1jH1fV6a6B-NKmuV-jDSGZrlcJfLIYzpn");'>
+<p class="text-white text-lg font-bold w-full line-clamp-2 transform-gpu transition-transform duration-300 group-hover:translate-y-[-8px]">Viking Runic Stones</p>
+</div>
+<div class="bg-cover bg-center flex flex-col rounded-lg justify-end p-4 aspect-[4/5] group transition-all duration-300 hover:shadow-2xl hover:shadow-black/30 hover:-translate-y-1" data-alt="An exquisite Persian miniature painting with fine details and gold leaf." style='background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0) 40%), url("https://lh3.googleusercontent.com/aida-public/AB6AXuDieylGph9JF11jwi5zV5_4A-PMgPl_xDopp8EkptlUX_W96qlXRNJVMILwn-g4G6DksQH6skbWrQHfCm9oPS_-7LNmcgouNnjJi3G48g2DU-0q7cpoLY3c_X14HwX-8OBRtaP-37nefWyvbXRULdi0D7BZAIpS6qmL4y8sfTxRiRSUDsHafh5STQaPpJiSZLXyOrnmw7o3TpP0nU3-zOI1wC2WUsghlfKFt5IwrHdEbkA77I_mmtZVfai0LjdFMcDdU_fmGBBR8fI4");'>
+<p class="text-white text-lg font-bold w-full line-clamp-2 transform-gpu transition-transform duration-300 group-hover:translate-y-[-8px]">Persian Miniature Paintings</p>
+</div>
+</div>
+</main>
+<footer class="mt-20 py-8 border-t border-slate-800">
+<div class="flex flex-col sm:flex-row justify-between items-center gap-4 px-4">
+<p class="text-sm text-slate-400">© 2024 CultureArc. All rights reserved.</p>
+<div class="flex items-center gap-6">
+<a class="text-sm text-slate-400 hover:text-accent" href="#">About Us</a>
+<a class="text-sm text-slate-400 hover:text-accent" href="#">Contact</a>
+<a class="text-sm text-slate-400 hover:text-accent" href="#">Privacy Policy</a>
+</div>
+</div>
+</footer>
+</div>
+</div>
+</div>
+</div>
+
+</body></html>

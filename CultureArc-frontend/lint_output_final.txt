@@ -1,0 +1,10 @@
+
+> culturearcfrontend@0.0.0 lint
+> eslint .
+
+
+D:\Projects\CultureArc\CultureArc-frontend\src\context\ThemeContext.jsx
+  3:14  error  Fast refresh only works when a file only exports components. Move your React context(s) to a separate file  react-refresh/only-export-components
+
+Γ£û 1 problem (1 error, 0 warnings)
+
