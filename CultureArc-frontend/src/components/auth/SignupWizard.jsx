@@ -10,7 +10,7 @@ import { Check, ArrowRight, ArrowLeft } from 'lucide-react';
 const SignupWizard = () => {
     const navigate = useNavigate();
     const { setAuth } = useAuth();
-    // Let's implement auto-login if backend returns token.
+
 
     const [step, setStep] = useState(1);
     const [loading, setLoading] = useState(false);

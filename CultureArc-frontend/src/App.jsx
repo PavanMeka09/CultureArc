@@ -17,7 +17,7 @@ import Layout from './components/layout/Layout';
 import PrivateRoute from './components/common/PrivateRoute';
 import { ThemeProvider } from './context/ThemeContext';
 import { AuthProvider } from './context/AuthContext';
-import './App.css';
+
 
 function App() {
   return (
