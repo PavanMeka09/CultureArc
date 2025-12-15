@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const {
     authUser,
-    // registerUser, // Deprecated
     getUserProfile,
 
     changePassword,
@@ -20,7 +19,6 @@ const {
 const { protect, admin } = require('../middleware/authMiddleware');
 const { validateRequest } = require('../middleware/validateRequest');
 const {
-    // registerSchema,
     loginSchema,
     changePasswordSchema,
     forgotPasswordSchema,

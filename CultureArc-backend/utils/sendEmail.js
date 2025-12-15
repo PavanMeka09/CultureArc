@@ -101,8 +101,7 @@ const sendPasswordResetEmail = async (user, resetUrl) => {
 
 module.exports = {
     sendEmail,
-    sendVerificationEmail,
-    sendPasswordResetEmail,
+    // sendOtpEmail and sendPasswordResetOtpEmail are below
     sendOtpEmail: async (email, otp) => {
         const subject = 'Your CultureArc Verification Code';
         const text = `Your verification code is: ${otp}\n\nThis code expires in 15 minutes.`;

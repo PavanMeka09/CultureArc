@@ -6,7 +6,7 @@ const Artifact = require('../models/Artifact');
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken'); // Added jwt require
-const { sendVerificationEmail, sendPasswordResetEmail, sendOtpEmail, sendPasswordResetOtpEmail } = require('../utils/sendEmail');
+const { sendOtpEmail, sendPasswordResetOtpEmail } = require('../utils/sendEmail');
 
 // @desc    Auth user & get token
 // @route   POST /api/users/login
@@ -388,7 +388,6 @@ const updateUser = asyncHandler(async (req, res) => {
 });
 
 module.exports = {
-    authUser,
     authUser,
     getUserProfile,
 
