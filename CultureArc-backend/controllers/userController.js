@@ -69,7 +69,12 @@ const initiateSignup = asyncHandler(async (req, res) => {
     }
 
     // Send OTP email
-    await sendOtpEmail(email, otp);
+    const emailResult = await sendOtpEmail(email, otp);
+
+    if (!emailResult.success) {
+        res.status(500);
+        throw new Error(`Failed to send OTP: ${emailResult.error || 'Unknown email error'}`);
+    }
 
     res.status(200).json({
         message: 'OTP sent to your email',

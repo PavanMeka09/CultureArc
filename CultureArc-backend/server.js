@@ -25,6 +25,11 @@ app.get('/', (req, res) => {
     res.send('API is running...');
 });
 
+const { notFound, errorHandler } = require('./middleware/errorMiddleware');
+
+app.use(notFound);
+app.use(errorHandler);
+
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {

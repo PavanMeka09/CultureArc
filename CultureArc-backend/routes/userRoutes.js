@@ -38,10 +38,12 @@ router.post('/login', validateRequest(loginSchema), authUser);
 router.post('/forgot-password', validateRequest(forgotPasswordSchema), forgotPassword);
 router.post('/verify-reset-otp', validateRequest(verifyOtpSchema), verifyResetOtp);
 router.post('/reset-password', validateRequest(resetPasswordSchema), resetPassword);
+// New Signup Flow
+router.post('/initiate-signup', validateRequest(initiateSignupSchema), initiateSignup);
+router.post('/verify-signup-otp', validateRequest(verifyOtpSchema), verifySignupOtp);
+router.post('/complete-signup', validateRequest(completeSignupSchema), completeSignup);
 
 // Protected routes
-router.route('/profile')
-    .get(protect, getUserProfile)
 router.route('/profile')
     .get(protect, getUserProfile)
 router.put('/password', protect, validateRequest(changePasswordSchema), changePassword);
