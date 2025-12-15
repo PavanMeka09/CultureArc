@@ -33,18 +33,7 @@ const resetPasswordSchema = z.object({
         .min(6, 'Password must be at least 6 characters')
 });
 
-const profileUpdateSchema = z.object({
-    name: z.string()
-        .min(2, 'Name must be at least 2 characters')
-        .max(50, 'Name must be at most 50 characters')
-        .trim()
-        .optional(),
 
-    avatar: z.string()
-        .url('Invalid avatar URL')
-        .optional()
-        .or(z.literal(''))
-});
 
 const adminUpdateUserSchema = z.object({
     name: z.string()
@@ -164,7 +153,7 @@ module.exports = {
     changePasswordSchema,
     forgotPasswordSchema,
     resetPasswordSchema,
-    profileUpdateSchema,
+
     adminUpdateUserSchema,
     adminUpdateUserSchema,
     // Artifact schemas

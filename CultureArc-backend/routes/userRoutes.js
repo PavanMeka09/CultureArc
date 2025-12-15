@@ -4,7 +4,7 @@ const {
     authUser,
     // registerUser, // Deprecated
     getUserProfile,
-    updateUserProfile,
+
     changePassword,
     forgotPassword,
     verifyResetOtp,
@@ -25,7 +25,7 @@ const {
     changePasswordSchema,
     forgotPasswordSchema,
     resetPasswordSchema,
-    profileUpdateSchema,
+
     adminUpdateUserSchema,
     // New schemas
     initiateSignupSchema,
@@ -42,7 +42,8 @@ router.post('/reset-password', validateRequest(resetPasswordSchema), resetPasswo
 // Protected routes
 router.route('/profile')
     .get(protect, getUserProfile)
-    .put(protect, validateRequest(profileUpdateSchema), updateUserProfile);
+router.route('/profile')
+    .get(protect, getUserProfile)
 router.put('/password', protect, validateRequest(changePasswordSchema), changePassword);
 router.get('/liked', protect, getLikedArtifacts);
 

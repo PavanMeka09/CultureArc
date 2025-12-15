@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Edit2, Heart, Upload, Camera, Eye, EyeOff } from 'lucide-react';
+import { Heart, Upload, Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import api from '../api/axios';
 import Button from '../components/common/Button';
@@ -9,18 +9,14 @@ import Input from '../components/common/Input';
 import { ArtifactGridSkeleton } from '../components/common/Skeleton';
 
 const ProfilePage = () => {
-    const { user, updateProfile } = useAuth();
+    const { user } = useAuth();
     const [activeTab, setActiveTab] = useState('uploads');
     const [myArtifacts, setMyArtifacts] = useState([]);
     const [likedArtifacts, setLikedArtifacts] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
-    const [editForm, setEditForm] = useState({ name: '', avatar: '' });
     const [passwordForm, setPasswordForm] = useState({ currentPassword: '', newPassword: '', confirmPassword: '' });
-    const [isSaving, setIsSaving] = useState(false);
     const [isChangingPassword, setIsChangingPassword] = useState(false);
-    const [uploadingAvatar, setUploadingAvatar] = useState(false);
     const [passwordError, setPasswordError] = useState('');
     const [passwordSuccess, setPasswordSuccess] = useState('');
     const [showCurrentPassword, setShowCurrentPassword] = useState(false);
@@ -52,43 +48,7 @@ const ProfilePage = () => {
         }
     }, [user, activeTab]);
 
-    useEffect(() => {
-        if (user) {
-            setEditForm({ name: user.name || '', avatar: user.avatar || '' });
-        }
-    }, [user]);
 
-    const handleAvatarUpload = async (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
-
-        const uploadData = new FormData();
-        uploadData.append('image', file);
-
-        setUploadingAvatar(true);
-        try {
-            const { data } = await api.post('/upload', uploadData, {
-                headers: { 'Content-Type': 'multipart/form-data' },
-            });
-            setEditForm(prev => ({ ...prev, avatar: data.image }));
-        } catch (err) {
-            console.error('Avatar upload failed', err);
-        } finally {
-            setUploadingAvatar(false);
-        }
-    };
-
-    const handleSaveProfile = async () => {
-        setIsSaving(true);
-        try {
-            await updateProfile(editForm);
-            setIsEditModalOpen(false);
-        } catch (error) {
-            console.error('Failed to update profile', error);
-        } finally {
-            setIsSaving(false);
-        }
-    };
 
     const handleChangePassword = async () => {
         setPasswordError('');
@@ -150,15 +110,7 @@ const ProfilePage = () => {
                             {user.name}
                         </h1>
                         <div className="flex gap-2">
-                            <Button
-                                variant="ghost"
-                                size="sm"
-                                className="gap-1"
-                                onClick={() => setIsEditModalOpen(true)}
-                            >
-                                <Edit2 size={16} />
-                                Edit Profile
-                            </Button>
+
                             <Button
                                 variant="ghost"
                                 size="sm"
@@ -261,61 +213,7 @@ const ProfilePage = () => {
                 </div>
             )}
 
-            {/* Edit Profile Modal */}
-            <Modal
-                isOpen={isEditModalOpen}
-                onClose={() => setIsEditModalOpen(false)}
-                title="Edit Profile"
-                size="md"
-            >
-                <div className="space-y-4">
-                    {/* Avatar Upload */}
-                    <div className="flex flex-col items-center gap-4">
-                        <div className="relative">
-                            {editForm.avatar ? (
-                                <img
-                                    src={editForm.avatar}
-                                    alt="Avatar preview"
-                                    className="h-20 w-20 rounded-full object-cover ring-2 ring-slate-200 dark:ring-slate-700"
-                                />
-                            ) : (
-                                <div className="h-20 w-20 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-2xl font-bold text-white">
-                                    {editForm.name?.charAt(0)?.toUpperCase() || 'U'}
-                                </div>
-                            )}
-                            <label className={`absolute -bottom-1 -right-1 p-2 rounded-full bg-primary text-white cursor-pointer hover:bg-primary/90 transition-colors ${uploadingAvatar ? 'opacity-50 cursor-not-allowed' : ''}`}>
-                                <Camera size={14} />
-                                <input
-                                    type="file"
-                                    onChange={handleAvatarUpload}
-                                    className="hidden"
-                                    accept="image/*"
-                                    disabled={uploadingAvatar}
-                                />
-                            </label>
-                        </div>
-                        <p className="text-xs text-slate-500">
-                            {uploadingAvatar ? 'Uploading...' : 'Click the camera to upload a new avatar'}
-                        </p>
-                    </div>
 
-                    <Input
-                        label="Display Name"
-                        value={editForm.name}
-                        onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
-                        placeholder="Your name"
-                    />
-
-                    <div className="flex justify-end gap-3 pt-4">
-                        <Button variant="ghost" onClick={() => setIsEditModalOpen(false)}>
-                            Cancel
-                        </Button>
-                        <Button variant="primary" onClick={handleSaveProfile} loading={isSaving}>
-                            Save Changes
-                        </Button>
-                    </div>
-                </div>
-            </Modal>
 
             {/* Change Password Modal */}
             <Modal
