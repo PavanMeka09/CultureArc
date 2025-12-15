@@ -75,7 +75,7 @@ const AddToCollectionModal = ({ isOpen, onClose, artifactId }) => {
             <div className="bg-white dark:bg-card-dark rounded-xl shadow-xl w-full max-w-md overflow-hidden relative">
 
                 {/* Header */}
-                <div className="flex items-center justify-between p-4 border-b border-slate-100 dark:border-slate-800">
+                <div className="flex items-center justify-between p-4 border-b border-border-light dark:border-border-dark">
                     <h3 className="text-lg font-bold text-slate-900 dark:text-white">
                         {view === 'create' ? 'New Collection' : 'Save to Collection'}
                     </h3>

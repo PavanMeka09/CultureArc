@@ -3,6 +3,8 @@
 
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --color-primary: #4A6D7C;
   --color-background-light: #F8F8F6;
@@ -10,6 +12,12 @@
   --color-text-light: #333333;
   --color-text-dark: #E0E0E0;
   --color-accent: #B88A76;
+
+  --color-card-light: #ffffff;
+  --color-card-dark: #1e293b;
+
+  --color-border-light: #e2e8f0;
+  --color-border-dark: #334155;
 
   --font-display: "Inter", sans-serif;
 

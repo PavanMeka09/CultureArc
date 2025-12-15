@@ -5,7 +5,7 @@ const Collection = require('../models/Collection');
 // @route   GET /api/collections
 // @access  Public
 const getCollections = asyncHandler(async (req, res) => {
-    const collections = await Collection.find({});
+    const collections = await Collection.find({}).populate('artifacts');
     res.json(collections);
 });
 
@@ -13,7 +13,7 @@ const getCollections = asyncHandler(async (req, res) => {
 // @route   GET /api/collections/:id
 // @access  Public
 const getCollectionById = asyncHandler(async (req, res) => {
-    const collection = await Collection.findById(req.params.id);
+    const collection = await Collection.findById(req.params.id).populate('artifacts');
 
     if (collection) {
         res.json(collection);
@@ -41,6 +41,54 @@ const createCollection = asyncHandler(async (req, res) => {
 
     const createdCollection = await collection.save();
     res.status(201).json(createdCollection);
+});
+
+// @desc    Update a collection
+// @route   PUT /api/collections/:id
+// @access  Private
+const updateCollection = asyncHandler(async (req, res) => {
+    const { title, description, imageUrl, isPrivate } = req.body;
+    const collection = await Collection.findById(req.params.id);
+
+    if (!collection) {
+        res.status(404);
+        throw new Error('Collection not found');
+    }
+
+    // Check ownership
+    if (collection.user.toString() !== req.user._id.toString() && !req.user.isAdmin) {
+        res.status(401);
+        throw new Error('Not authorized to update this collection');
+    }
+
+    collection.title = title || collection.title;
+    collection.description = description || collection.description;
+    collection.imageUrl = imageUrl || collection.imageUrl;
+    collection.isPrivate = isPrivate !== undefined ? isPrivate : collection.isPrivate;
+
+    const updatedCollection = await collection.save();
+    res.json(updatedCollection);
+});
+
+// @desc    Delete a collection
+// @route   DELETE /api/collections/:id
+// @access  Private
+const deleteCollection = asyncHandler(async (req, res) => {
+    const collection = await Collection.findById(req.params.id);
+
+    if (!collection) {
+        res.status(404);
+        throw new Error('Collection not found');
+    }
+
+    // Check ownership
+    if (collection.user.toString() !== req.user._id.toString() && !req.user.isAdmin) {
+        res.status(401);
+        throw new Error('Not authorized to delete this collection');
+    }
+
+    await collection.deleteOne();
+    res.json({ message: 'Collection removed' });
 });
 
 // @desc    Add artifact to collection
@@ -72,11 +120,36 @@ const addArtifactToCollection = asyncHandler(async (req, res) => {
     }
 });
 
+// @desc    Remove artifact from collection
+// @route   DELETE /api/collections/:id/artifacts/:artifactId
+// @access  Private
+const removeArtifactFromCollection = asyncHandler(async (req, res) => {
+    const collection = await Collection.findById(req.params.id);
+
+    if (!collection) {
+        res.status(404);
+        throw new Error('Collection not found');
+    }
+
+    // Check ownership
+    if (collection.user.toString() !== req.user._id.toString() && !req.user.isAdmin) {
+        res.status(401);
+        throw new Error('Not authorized to update this collection');
+    }
+
+    collection.artifacts = collection.artifacts.filter(
+        id => id.toString() !== req.params.artifactId
+    );
+
+    const updatedCollection = await collection.save();
+    res.json(updatedCollection);
+});
+
 // @desc    Get logged in user's collections
 // @route   GET /api/collections/my
 // @access  Private
 const getMyCollections = asyncHandler(async (req, res) => {
-    const collections = await Collection.find({ user: req.user._id });
+    const collections = await Collection.find({ user: req.user._id }).populate('artifacts');
     res.json(collections);
 });
 
@@ -84,6 +157,9 @@ module.exports = {
     getCollections,
     getCollectionById,
     createCollection,
+    updateCollection,
+    deleteCollection,
     addArtifactToCollection,
+    removeArtifactFromCollection,
     getMyCollections
 };

@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import { Loader2 } from 'lucide-react';
 
 const Button = ({
     children,
@@ -7,6 +8,7 @@ const Button = ({
     size = 'md',
     type = 'button',
     disabled = false,
+    loading = false,
     className = '',
     icon: Icon
 }) => {
@@ -14,7 +16,7 @@ const Button = ({
 
     const variants = {
         primary: "bg-primary text-white hover:bg-opacity-90 focus:ring-primary shadow-md hover:shadow-lg",
-        secondary: "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 focus:ring-slate-500",
+        secondary: "bg-card-light dark:bg-card-dark text-slate-700 dark:text-slate-200 border border-border-light dark:border-border-dark hover:bg-slate-50 dark:hover:bg-slate-700 focus:ring-slate-500",
         outline: "bg-transparent border-2 border-primary text-primary hover:bg-primary/10 focus:ring-primary",
         ghost: "bg-transparent text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-slate-200",
         accent: "bg-accent text-white hover:bg-opacity-90 focus:ring-accent shadow-md hover:shadow-lg",
@@ -27,17 +29,28 @@ const Button = ({
         icon: "p-2",
     };
 
+    const isDisabled = disabled || loading;
+
     return (
         <motion.button
-            whileHover={{ scale: disabled ? 1 : 1.02 }}
-            whileTap={{ scale: disabled ? 1 : 0.98 }}
+            whileHover={{ scale: isDisabled ? 1 : 1.02 }}
+            whileTap={{ scale: isDisabled ? 1 : 0.98 }}
             type={type}
             className={`${baseStyles} ${variants[variant]} ${sizes[size]} ${className}`}
             onClick={onClick}
-            disabled={disabled}
+            disabled={isDisabled}
         >
-            {Icon && <Icon className={`mr-2 h-5 w-5 ${size === 'icon' ? 'mr-0' : ''}`} />}
-            {children}
+            {loading ? (
+                <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    <span>{children}</span>
+                </>
+            ) : (
+                <>
+                    {Icon && <Icon className={`mr-2 h-5 w-5 ${size === 'icon' ? 'mr-0' : ''}`} />}
+                    {children}
+                </>
+            )}
         </motion.button>
     );
 };

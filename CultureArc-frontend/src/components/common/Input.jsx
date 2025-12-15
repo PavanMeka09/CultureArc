@@ -29,13 +29,14 @@ const Input = ({
                     type={type}
                     className={`
                         w-full rounded-lg bg-white dark:bg-background-dark border
-                        ${error ? 'border-red-500 focus:ring-red-500' : 'border-slate-200 dark:border-slate-700 focus:ring-primary/50'}
+                        ${error ? 'border-red-500 focus:ring-red-500' : 'border-border-light dark:border-border-dark focus:ring-primary/50'}
                         ${Icon ? 'pl-10' : 'px-4'} pr-4 py-2.5
                         text-text-light dark:text-text-dark
                         placeholder:text-slate-400 dark:placeholder:text-slate-500
                         transition-all duration-200
                         focus:outline-none focus:ring-2 focus:border-transparent
                         disabled:opacity-50 disabled:cursor-not-allowed
+                        ${props.className || ''}
                     `}
                     placeholder={placeholder}
                     value={value}

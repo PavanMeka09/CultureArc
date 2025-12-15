@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Image as ImageIcon } from 'lucide-react';
+import { Image as ImageIcon, ShieldCheck, ShieldAlert, Check, Loader2 } from 'lucide-react';
 import Input from '../components/common/Input';
 import Button from '../components/common/Button';
 import api from '../api/axios';
@@ -18,11 +18,22 @@ const ArtifactUploadPage = () => {
     });
     const [loading, setLoading] = useState(false);
     const [uploading, setUploading] = useState(false);
+    const [verifying, setVerifying] = useState(false);
+    const [isFetching, setIsFetching] = useState(!!id);
     const [error, setError] = useState('');
+
+    // AI Review State
+    const [aiReview, setAiReview] = useState({
+        status: 'idle', // idle, success, error
+        score: null,
+        feedback: '',
+        isAuthentic: false
+    });
 
     useEffect(() => {
         if (id) {
             const fetchArtifact = async () => {
+                setIsFetching(true);
                 try {
                     const { data } = await api.get(`/artifacts/${id}`);
                     setFormData({
@@ -33,9 +44,17 @@ const ArtifactUploadPage = () => {
                         era: data.era,
                         region: data.region
                     });
+                    // For editing, we might assume it's already verified or require re-verification if changed.
+                    // For simplicity, let's assume editing doesn't require re-verification unless critical fields change, 
+                    // but the prompt implies a general flow. Let's force verification for new edits if we want to be strict,
+                    // or just let it be. The prompt says "when user clicks submit artifact data should go for ai review".
+                    // Let's reset verification on edit load to be safe.
+                    setAiReview({ status: 'idle', score: null, feedback: '', isAuthentic: false });
                 } catch (err) {
                     console.error(err);
                     setError('Failed to fetch artifact details');
+                } finally {
+                    setIsFetching(false);
                 }
             };
             fetchArtifact();
@@ -45,6 +64,10 @@ const ArtifactUploadPage = () => {
     const handleChange = (e) => {
         const { id, value } = e.target;
         setFormData(prev => ({ ...prev, [id]: value }));
+        // Reset verification if user changes details
+        if (aiReview.status !== 'idle') {
+            setAiReview({ status: 'idle', score: null, feedback: '', isAuthentic: false });
+        }
     };
 
     const handleFileChange = async (e) => {
@@ -55,6 +78,9 @@ const ArtifactUploadPage = () => {
         uploadData.append('image', file);
 
         setUploading(true);
+        // Reset verification on new image
+        setAiReview({ status: 'idle', score: null, feedback: '', isAuthentic: false });
+
         try {
             const { data } = await api.post('/upload', uploadData, {
                 headers: { 'Content-Type': 'multipart/form-data' },
@@ -68,8 +94,41 @@ const ArtifactUploadPage = () => {
         }
     };
 
+    const handleVerify = async () => {
+        if (!formData.title || !formData.imageUrl || !formData.description) {
+            setError('Please fill in all required fields and upload an image before verification.');
+            return;
+        }
+
+        setVerifying(true);
+        setError('');
+
+        try {
+            const { data } = await api.post('/ai/analyze', formData);
+
+            setAiReview({
+                status: data.isAuthentic ? 'success' : 'error',
+                score: data.authenticityScore,
+                feedback: data.feedback,
+                isAuthentic: data.isAuthentic
+            });
+
+        } catch (err) {
+            console.error('Verification failed', err);
+            setError('AI Verification failed. Please try again.');
+        } finally {
+            setVerifying(false);
+        }
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        if (!aiReview.isAuthentic) {
+            setError('Artifact must be verified as authentic before submission.');
+            return;
+        }
+
         setLoading(true);
         setError('');
 
@@ -87,6 +146,17 @@ const ArtifactUploadPage = () => {
             setLoading(false);
         }
     };
+
+    if (isFetching) {
+        return (
+            <div className="flex flex-col flex-1 max-w-4xl w-full mx-auto p-4 sm:p-6 lg:p-8">
+                <div className="flex flex-col items-center justify-center py-20">
+                    <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mb-4"></div>
+                    <p className="text-slate-500 dark:text-slate-400">Loading artifact details...</p>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="flex flex-col flex-1 max-w-4xl w-full mx-auto p-4 sm:p-6 lg:p-8">
@@ -213,12 +283,58 @@ const ArtifactUploadPage = () => {
                             </div>
                         </div>
 
+                        {/* AI Verification Section */}
+                        <div className="bg-slate-50 dark:bg-slate-900/50 rounded-xl p-6 border border-slate-200 dark:border-slate-800">
+                            <div className="flex items-start gap-4">
+                                <div className={`p-3 rounded-full ${aiReview.status === 'success' ? 'bg-green-100 text-green-600 dark:bg-green-900/20 dark:text-green-400' : aiReview.status === 'error' ? 'bg-red-100 text-red-600 dark:bg-red-900/20 dark:text-red-400' : 'bg-primary/10 text-primary'}`}>
+                                    {aiReview.status === 'success' ? <ShieldCheck size={24} /> : aiReview.status === 'error' ? <ShieldAlert size={24} /> : <ShieldCheck size={24} />}
+                                </div>
+                                <div className="flex-1">
+                                    <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-1">Authenticity Verification</h3>
+                                    <p className="text-slate-600 dark:text-slate-400 text-sm mb-4">
+                                        Before submission, our AI system analyzes the artifact details and image to verify its authenticity and historical accuracy.
+                                    </p>
+
+                                    {aiReview.status === 'idle' && (
+                                        <Button
+                                            type="button"
+                                            variant="secondary"
+                                            onClick={handleVerify}
+                                            disabled={verifying || uploading || !formData.imageUrl}
+                                            className="w-full sm:w-auto"
+                                        >
+                                            {verifying ? (
+                                                <>
+                                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                                    Verifying...
+                                                </>
+                                            ) : 'Verify Authenticity'}
+                                        </Button>
+                                    )}
+
+                                    {aiReview.status !== 'idle' && (
+                                        <div className={`mt-4 p-4 rounded-lg ${aiReview.isAuthentic ? 'bg-green-50 dark:bg-green-900/10 border border-green-200 dark:border-green-800' : 'bg-red-50 dark:bg-red-900/10 border border-red-200 dark:border-red-800'}`}>
+                                            <div className="flex items-center justify-between mb-2">
+                                                <span className={`font-bold ${aiReview.isAuthentic ? 'text-green-700 dark:text-green-400' : 'text-red-700 dark:text-red-400'}`}>
+                                                    {aiReview.isAuthentic ? 'Authenticity Verified' : 'Verification Failed'}
+                                                </span>
+                                                <span className="text-sm font-semibold text-slate-500">Score: {aiReview.score}/100</span>
+                                            </div>
+                                            <p className="text-sm text-slate-700 dark:text-slate-300">{aiReview.feedback}</p>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+
                         {/* Footer with CTA */}
                         <div className="px-6 py-5 bg-slate-50 dark:bg-slate-900/50 border-t border-slate-200 dark:border-slate-800 flex justify-end gap-3 -mx-6 -mb-8 sm:-mx-8 sm:-mb-8 rounded-b-xl">
                             <Button variant="ghost" type="button" onClick={() => navigate(-1)}>Cancel</Button>
-                            <Button variant="primary" type="submit" disabled={loading}>
-                                {loading ? 'Saving...' : (id ? 'Update Artifact' : 'Submit Artifact')}
-                            </Button>
+                            {aiReview.isAuthentic && (
+                                <Button variant="primary" type="submit" disabled={loading}>
+                                    {loading ? 'Saving...' : (id ? 'Update Artifact' : 'Submit Artifact')}
+                                </Button>
+                            )}
                         </div>
                     </form>
                 </div>

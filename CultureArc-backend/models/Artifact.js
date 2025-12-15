@@ -26,6 +26,17 @@ const artifactSchema = mongoose.Schema(
             type: String,
             required: true,
         },
+        status: {
+            type: String,
+            enum: ['pending', 'approved', 'rejected'],
+            default: 'pending',
+        },
+        aiReview: {
+            isAppropriate: { type: Boolean },
+            confidence: { type: Number },
+            reason: { type: String },
+            reviewedAt: { type: Date },
+        },
         likes: [{
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User'

@@ -8,16 +8,23 @@ const LoginPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
     const { login } = useAuth();
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true);
+        setError('');
         try {
             await login(email, password);
             navigate('/');
         } catch (err) {
-            setError(err.response?.data?.message || 'Failed to login');
+            // Handle validation errors from Zod
+            const message = err.response?.data?.errors?.[0] || err.response?.data?.message || 'Failed to login';
+            setError(message);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -50,7 +57,13 @@ const LoginPage = () => {
                         required
                     />
 
-                    <Button type="submit" variant="primary" className="w-full justify-center mt-6">
+                    <div className="text-right">
+                        <Link to="/forgot-password" className="text-sm text-primary hover:underline">
+                            Forgot password?
+                        </Link>
+                    </div>
+
+                    <Button type="submit" variant="primary" className="w-full justify-center mt-6" loading={loading}>
                         Sign In
                     </Button>
                 </form>

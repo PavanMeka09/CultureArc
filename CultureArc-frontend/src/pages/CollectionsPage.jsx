@@ -1,84 +1,231 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Layers, Search, Settings, Plus, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Plus, ChevronLeft, ChevronRight, Image as ImageIcon } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 import api from '../api/axios';
+import Button from '../components/common/Button';
+import Modal from '../components/common/Modal';
+import Input from '../components/common/Input';
 
 const CollectionsPage = () => {
+    const { user } = useAuth();
+    const navigate = useNavigate();
     const [collections, setCollections] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+    const [createForm, setCreateForm] = useState({ title: '', description: '', imageUrl: '' });
+    const [isCreating, setIsCreating] = useState(false);
+    const [uploadingImage, setUploadingImage] = useState(false);
+    const [filter, setFilter] = useState('all');
 
     useEffect(() => {
         const fetchCollections = async () => {
+            setLoading(true);
             try {
-                const { data } = await api.get('/collections');
+                const endpoint = user && filter === 'mine' ? '/collections/my' : '/collections';
+                const { data } = await api.get(endpoint);
                 setCollections(data);
             } catch (error) {
                 console.error('Failed to fetch collections', error);
+            } finally {
+                setLoading(false);
             }
         };
 
         fetchCollections();
-    }, []);
+    }, [user, filter]);
+
+    const handleImageUpload = async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const uploadData = new FormData();
+        uploadData.append('image', file);
+
+        setUploadingImage(true);
+        try {
+            const { data } = await api.post('/upload', uploadData, {
+                headers: { 'Content-Type': 'multipart/form-data' },
+            });
+            setCreateForm(prev => ({ ...prev, imageUrl: data.image }));
+        } catch (err) {
+            console.error('Image upload failed', err);
+        } finally {
+            setUploadingImage(false);
+        }
+    };
+
+    const handleCreateCollection = async () => {
+        if (!createForm.title.trim()) return;
+        setIsCreating(true);
+        try {
+            const { data } = await api.post('/collections', createForm);
+            setCollections(prev => [data, ...prev]);
+            setIsCreateModalOpen(false);
+            setCreateForm({ title: '', description: '', imageUrl: '' });
+            navigate(`/collection/${data._id}`);
+        } catch (error) {
+            console.error('Failed to create collection', error);
+        } finally {
+            setIsCreating(false);
+        }
+    };
 
     return (
         <div className="flex flex-col flex-1 py-10 px-6">
             {/* PageHeading */}
             <div className="flex flex-wrap justify-between items-center gap-4 mb-8">
                 <div className="flex flex-col gap-2">
-                    <p className="text-slate-900 dark:text-white text-4xl font-black leading-tight tracking-[-0.033em]">My Collections</p>
-                    <p className="text-slate-500 dark:text-slate-400 text-base font-normal leading-normal">A curated archive of your saved cultural heritage.</p>
+                    <p className="text-slate-900 dark:text-white text-4xl font-black leading-tight tracking-[-0.033em]">Collections</p>
+                    <p className="text-slate-500 dark:text-slate-400 text-base font-normal leading-normal">Curated archives of cultural heritage artifacts.</p>
                 </div>
-                <button className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em] gap-2 hover:bg-primary/90 transition-colors">
-                    <Plus size={18} />
-                    <span className="truncate">Create New Collection</span>
-                </button>
+                {user && (
+                    <button
+                        onClick={() => setIsCreateModalOpen(true)}
+                        className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em] gap-2 hover:bg-primary/90 transition-colors"
+                    >
+                        <Plus size={18} />
+                        <span className="truncate">Create New Collection</span>
+                    </button>
+                )}
             </div>
+
             {/* Chips */}
             <div className="flex gap-2 p-1 overflow-x-auto mb-8">
-                <button className="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-primary/20 text-primary px-4 shadow-sm">
+                <button
+                    onClick={() => setFilter('all')}
+                    className={`flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-lg px-4 shadow-sm transition-colors ${filter === 'all'
+                            ? 'bg-primary/20 text-primary'
+                            : 'bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700'
+                        }`}
+                >
                     <p className="text-sm font-medium leading-normal">All</p>
                 </button>
-                <button className="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-4 text-slate-800 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
-                    <p className="text-sm font-medium leading-normal">By Date</p>
-                </button>
-                <button className="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-4 text-slate-800 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
-                    <p className="text-sm font-medium leading-normal">By Region</p>
-                </button>
-                <button className="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-4 text-slate-800 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
-                    <p className="text-sm font-medium leading-normal">Recently Added</p>
-                </button>
+                {user && (
+                    <button
+                        onClick={() => setFilter('mine')}
+                        className={`flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-lg px-4 shadow-sm transition-colors ${filter === 'mine'
+                                ? 'bg-primary/20 text-primary'
+                                : 'bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700'
+                            }`}
+                    >
+                        <p className="text-sm font-medium leading-normal">My Collections</p>
+                    </button>
+                )}
             </div>
-            {/* ImageGrid */}
-            <div className="grid grid-cols-[repeat(auto-fill,minmax(240px,1fr))] gap-6">
-                {collections.length > 0 ? (
-                    collections.map((item) => (
-                        <div key={item._id} className="flex flex-col gap-3 group cursor-pointer bg-white dark:bg-card-dark p-3 rounded-xl shadow-sm hover:shadow-md transition-all">
+
+            {/* Collections Grid */}
+            {loading ? (
+                <div className="grid grid-cols-[repeat(auto-fill,minmax(240px,1fr))] gap-6">
+                    {[...Array(6)].map((_, i) => (
+                        <div key={i} className="flex flex-col gap-3 bg-white dark:bg-card-dark p-3 rounded-xl shadow-sm animate-pulse">
+                            <div className="w-full aspect-[4/3] bg-slate-200 dark:bg-slate-800 rounded-lg"></div>
+                            <div className="h-4 bg-slate-200 dark:bg-slate-800 rounded w-3/4"></div>
+                            <div className="h-3 bg-slate-200 dark:bg-slate-800 rounded w-1/2"></div>
+                        </div>
+                    ))}
+                </div>
+            ) : collections.length > 0 ? (
+                <div className="grid grid-cols-[repeat(auto-fill,minmax(240px,1fr))] gap-6">
+                    {collections.map((item) => (
+                        <Link
+                            to={`/collection/${item._id}`}
+                            key={item._id}
+                            className="flex flex-col gap-3 group cursor-pointer bg-white dark:bg-card-dark p-3 rounded-xl shadow-sm hover:shadow-md transition-all"
+                        >
                             <div className="w-full bg-center bg-no-repeat aspect-[4/3] bg-cover rounded-lg overflow-hidden">
                                 <div className="w-full h-full transition-transform duration-300 group-hover:scale-105" style={{ backgroundImage: `url("${item.imageUrl}")` }}></div>
                             </div>
                             <div>
                                 <p className="text-slate-900 dark:text-white text-base font-bold leading-normal">{item.title}</p>
-                                <p className="text-slate-500 dark:text-slate-400 text-sm font-normal leading-normal">{item.artifacts ? item.artifacts.length : 0} Artifacts</p>
+                                <p className="text-slate-500 dark:text-slate-400 text-sm font-normal leading-normal">{item.artifacts?.length || 0} Artifacts</p>
                             </div>
+                        </Link>
+                    ))}
+                </div>
+            ) : (
+                <div className="text-center py-16 bg-slate-50 dark:bg-slate-900/40 rounded-xl border border-dashed border-slate-200 dark:border-slate-800">
+                    <p className="text-slate-500 mb-4">
+                        {filter === 'mine' ? "You haven't created any collections yet." : "No collections found."}
+                    </p>
+                    {user && (
+                        <Button variant="primary" onClick={() => setIsCreateModalOpen(true)}>
+                            Create your first collection
+                        </Button>
+                    )}
+                </div>
+            )}
+
+            {/* Create Collection Modal */}
+            <Modal
+                isOpen={isCreateModalOpen}
+                onClose={() => {
+                    setIsCreateModalOpen(false);
+                    setCreateForm({ title: '', description: '', imageUrl: '' });
+                }}
+                title="Create New Collection"
+                size="md"
+            >
+                <div className="space-y-4">
+                    {/* Cover Image Upload */}
+                    <div className="flex flex-col items-center gap-4">
+                        <div className="relative w-full">
+                            {createForm.imageUrl ? (
+                                <div
+                                    className="w-full h-32 rounded-lg bg-cover bg-center"
+                                    style={{ backgroundImage: `url("${createForm.imageUrl}")` }}
+                                />
+                            ) : (
+                                <div className="w-full h-32 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
+                                    <ImageIcon size={32} className="text-slate-400" />
+                                </div>
+                            )}
+                            <label className={`absolute bottom-2 right-2 px-3 py-1.5 rounded-lg bg-primary text-white text-sm cursor-pointer hover:bg-primary/90 transition-colors ${uploadingImage ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                                {uploadingImage ? 'Uploading...' : 'Upload Cover'}
+                                <input
+                                    type="file"
+                                    onChange={handleImageUpload}
+                                    className="hidden"
+                                    accept="image/*"
+                                    disabled={uploadingImage}
+                                />
+                            </label>
                         </div>
-                    ))
-                ) : (
-                    <p className="px-4 text-slate-500">Loading collections/No collections found.</p>
-                )}
-            </div>
-            {/* Pagination */}
-            <div className="flex items-center justify-center p-4 mt-8">
-                <a className="flex size-10 items-center justify-center text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-primary transition-colors" href="#">
-                    <ChevronLeft size={24} />
-                </a>
-                <a className="text-sm font-bold leading-normal tracking-[0.015em] flex size-10 items-center justify-center text-white rounded-full bg-primary shadow-sm" href="#">1</a>
-                <a className="text-sm font-normal leading-normal flex size-10 items-center justify-center text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-primary rounded-full transition-colors" href="#">2</a>
-                <a className="text-sm font-normal leading-normal flex size-10 items-center justify-center text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-primary rounded-full transition-colors" href="#">3</a>
-                <span className="text-sm font-normal leading-normal flex size-10 items-center justify-center text-slate-500 dark:text-slate-500 rounded-full">...</span>
-                <a className="text-sm font-normal leading-normal flex size-10 items-center justify-center text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-primary rounded-full transition-colors" href="#">8</a>
-                <a className="flex size-10 items-center justify-center text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-primary transition-colors" href="#">
-                    <ChevronRight size={24} />
-                </a>
-            </div>
+                    </div>
+
+                    <Input
+                        label="Collection Title"
+                        value={createForm.title}
+                        onChange={(e) => setCreateForm({ ...createForm, title: e.target.value })}
+                        placeholder="e.g., Ancient Egyptian Artifacts"
+                        required
+                    />
+                    <div>
+                        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
+                            Description
+                        </label>
+                        <textarea
+                            value={createForm.description}
+                            onChange={(e) => setCreateForm({ ...createForm, description: e.target.value })}
+                            placeholder="Describe your collection..."
+                            className="block w-full rounded-lg border-slate-200 dark:border-slate-700 bg-white dark:bg-background-dark text-slate-900 dark:text-white shadow-sm focus:border-primary focus:ring-primary/50 text-base p-3 min-h-[100px] placeholder:text-slate-400"
+                        />
+                    </div>
+                    <div className="flex justify-end gap-3 pt-4">
+                        <Button variant="ghost" onClick={() => setIsCreateModalOpen(false)}>
+                            Cancel
+                        </Button>
+                        <Button
+                            variant="primary"
+                            onClick={handleCreateCollection}
+                            loading={isCreating}
+                            disabled={!createForm.title.trim()}
+                        >
+                            Create Collection
+                        </Button>
+                    </div>
+                </div>
+            </Modal>
         </div>
     );
 };

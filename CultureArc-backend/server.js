@@ -16,6 +16,7 @@ app.use('/api/artifacts', require('./routes/artifactRoutes'));
 app.use('/api/collections', require('./routes/collectionRoutes'));
 app.use('/api/users', require('./routes/userRoutes'));
 app.use('/api/upload', require('./routes/uploadRoutes'));
+app.use('/api/ai', require('./routes/aiRoutes'));
 
 const path = require('path');
 app.use('/uploads', express.static(path.join(__dirname, '/uploads')));

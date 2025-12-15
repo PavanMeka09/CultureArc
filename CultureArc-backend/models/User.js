@@ -20,6 +20,24 @@ const userSchema = mongoose.Schema(
             required: true,
             default: false,
         },
+
+        avatar: {
+            type: String,
+            default: '',
+        },
+        isVerified: {
+            type: Boolean,
+            default: false,
+        },
+        verificationToken: {
+            type: String,
+        },
+        resetPasswordToken: {
+            type: String,
+        },
+        resetPasswordExpire: {
+            type: Date,
+        },
     },
     {
         timestamps: true,
