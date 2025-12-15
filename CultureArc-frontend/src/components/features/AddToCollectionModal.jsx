@@ -24,7 +24,7 @@ const AddToCollectionModal = ({ isOpen, onClose, artifactId }) => {
     const fetchCollections = async () => {
         setLoading(true);
         try {
-            const { data } = await api.get('/collections/my');
+            const { data } = await api.get('/collections');
             setCollections(data);
         } catch (error) {
             console.error(error);
@@ -37,14 +37,19 @@ const AddToCollectionModal = ({ isOpen, onClose, artifactId }) => {
         e.preventDefault();
         setLoading(true);
         try {
-            await api.post('/collections', {
+            const { data: newCollection } = await api.post('/collections', {
                 title: newCollectionTitle,
-                description: 'Created via Add to Collection',
-                imageUrl: '' // Use default
+                description: 'Created via Add to Collection'
             });
             await fetchCollections();
-            setView('list');
-            setMessage({ type: 'success', text: 'Collection created successfully!' });
+
+            // Auto add the artifact to the new collection
+            if (artifactId) {
+                await handleAddToCollection(newCollection._id);
+            } else {
+                setView('list');
+                setMessage({ type: 'success', text: 'Collection created successfully!' });
+            }
         } catch (error) {
             setMessage({ type: 'error', text: 'Failed to create collection.' });
         } finally {

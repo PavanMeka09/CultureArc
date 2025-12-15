@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
-import { BookmarkPlus, Share2, Edit2, Trash2, Heart, AlertTriangle, Check, X } from 'lucide-react';
+import { BookmarkPlus, Edit2, Trash2, Heart, AlertTriangle, Check, X } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import Button from '../components/common/Button';
 import Modal from '../components/common/Modal';
@@ -229,10 +229,7 @@ const ArtifactDetailPage = () => {
                                 <BookmarkPlus size={20} />
                                 <span>Add to Collection</span>
                             </Button>
-                            <Button variant="outline" className="gap-2">
-                                <Share2 size={20} />
-                                <span>Share</span>
-                            </Button>
+
                         </div>
 
                         {/* Comments Section */}

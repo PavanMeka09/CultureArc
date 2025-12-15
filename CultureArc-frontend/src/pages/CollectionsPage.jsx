@@ -58,8 +58,11 @@ const CollectionsPage = () => {
     const handleCreateCollection = async () => {
         if (!createForm.title.trim()) return;
         setIsCreating(true);
+        const payload = { ...createForm };
+        if (!payload.imageUrl) delete payload.imageUrl;
+
         try {
-            const { data } = await api.post('/collections', createForm);
+            const { data } = await api.post('/collections', payload);
             setCollections(prev => [data, ...prev]);
             setIsCreateModalOpen(false);
             setCreateForm({ title: '', description: '', imageUrl: '' });
