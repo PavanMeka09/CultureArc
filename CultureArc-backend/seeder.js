@@ -33,6 +33,7 @@ const importData = async () => {
                 era: 'Roman Empire',
                 region: 'Rome',
                 user: adminUser,
+                status: 'approved',
             },
             {
                 title: 'Japanese Ukiyo-e Prints',
@@ -42,6 +43,7 @@ const importData = async () => {
                 era: 'Edo Period',
                 region: 'Japan',
                 user: adminUser,
+                status: 'approved',
             },
             {
                 title: 'Mayan Glyphs & Carvings',
@@ -51,6 +53,7 @@ const importData = async () => {
                 era: 'Classic Period',
                 region: 'Mexico',
                 user: adminUser,
+                status: 'approved',
             },
             {
                 title: 'Egyptian Hieroglyphs',
@@ -60,6 +63,7 @@ const importData = async () => {
                 era: 'Ancient Egypt',
                 region: 'Egypt',
                 user: adminUser,
+                status: 'approved',
             },
             {
                 title: 'Viking Runic Stones',
@@ -69,6 +73,7 @@ const importData = async () => {
                 era: 'Viking Age',
                 region: 'Scandinavia',
                 user: adminUser,
+                status: 'approved',
             },
             {
                 title: 'Persian Miniature Paintings',
@@ -78,6 +83,7 @@ const importData = async () => {
                 era: 'Timurid Empire',
                 region: 'Persia',
                 user: adminUser,
+                status: 'approved',
             },
 
         ];
