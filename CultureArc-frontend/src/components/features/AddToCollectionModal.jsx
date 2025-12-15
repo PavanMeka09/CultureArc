@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { X, Plus, FolderPlus } from 'lucide-react';
 import Button from '../common/Button';
 import Input from '../common/Input';
@@ -91,66 +92,85 @@ const AddToCollectionModal = ({ isOpen, onClose, artifactId }) => {
 
                 {/* Content */}
                 <div className="p-4">
-                    {message && (
-                        <div className={`p-3 rounded-lg text-sm mb-4 ${message.type === 'success' ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-600'}`}>
-                            {message.text}
+                    {!user ? (
+                        <div className="flex flex-col items-center justify-center py-8 text-center">
+                            <div className="h-16 w-16 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mb-4">
+                                <FolderPlus className="h-8 w-8 text-slate-400" />
+                            </div>
+                            <h4 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Login Required</h4>
+                            <p className="text-slate-600 dark:text-slate-400 mb-8 max-w-[260px] mx-auto">
+                                Please login to create collections and save artifacts.
+                            </p>
+                            <Link to="/login" onClick={onClose}>
+                                <Button variant="primary" className="w-full sm:w-auto px-8">
+                                    Login to Continue
+                                </Button>
+                            </Link>
                         </div>
-                    )}
-
-                    {view === 'list' ? (
-                        <div className="space-y-3">
-                            {loading ? (
-                                <p className="text-center text-slate-500 py-4">Loading collections...</p>
-                            ) : collections.length > 0 ? (
-                                <div className="max-h-60 overflow-y-auto space-y-2 pr-1 custom-scrollbar">
-                                    {collections.map(col => (
-                                        <button
-                                            key={col._id}
-                                            onClick={() => handleAddToCollection(col._id)}
-                                            className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors text-left group"
-                                        >
-                                            <div className="h-10 w-10 rounded bg-slate-200 bg-cover bg-center shrink-0" style={{ backgroundImage: `url(${col.imageUrl})` }}></div>
-                                            <div className="flex-1 min-w-0">
-                                                <p className="font-medium text-slate-900 dark:text-slate-100 truncate">{col.title}</p>
-                                                <p className="text-xs text-slate-500 dark:text-slate-400">{col.artifacts?.length || 0} items</p>
-                                            </div>
-                                            <Plus size={18} className="text-slate-400 group-hover:text-primary opacity-0 group-hover:opacity-100 transition-all" />
-                                        </button>
-                                    ))}
-                                </div>
-                            ) : (
-                                <div className="text-center py-6 text-slate-500">
-                                    <FolderPlus size={32} className="mx-auto mb-2 opacity-50" />
-                                    <p>No collections yet.</p>
+                    ) : (
+                        <>
+                            {message && (
+                                <div className={`p-3 rounded-lg text-sm mb-4 ${message.type === 'success' ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-600'}`}>
+                                    {message.text}
                                 </div>
                             )}
 
-                            <Button
-                                variant="secondary"
-                                className="w-full justify-center mt-2 border-dashed"
-                                onClick={() => setView('create')}
-                                icon={Plus}
-                            >
-                                Create New Collection
-                            </Button>
-                        </div>
-                    ) : (
-                        <form onSubmit={handleCreateCollection} className="space-y-4">
-                            <Input
-                                label="Collection Name"
-                                placeholder="e.g. Ancient Pottery"
-                                value={newCollectionTitle}
-                                onChange={(e) => setNewCollectionTitle(e.target.value)}
-                                autoFocus
-                                required
-                            />
-                            <div className="flex gap-2 justify-end pt-2">
-                                <Button variant="ghost" type="button" onClick={() => setView('list')}>Back</Button>
-                                <Button variant="primary" type="submit" disabled={!newCollectionTitle.trim() || loading}>
-                                    Create Collection
-                                </Button>
-                            </div>
-                        </form>
+                            {view === 'list' ? (
+                                <div className="space-y-3">
+                                    {loading ? (
+                                        <p className="text-center text-slate-500 py-4">Loading collections...</p>
+                                    ) : collections.length > 0 ? (
+                                        <div className="max-h-60 overflow-y-auto space-y-2 pr-1 custom-scrollbar">
+                                            {collections.map(col => (
+                                                <button
+                                                    key={col._id}
+                                                    onClick={() => handleAddToCollection(col._id)}
+                                                    className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors text-left group"
+                                                >
+                                                    <div className="h-10 w-10 rounded bg-slate-200 bg-cover bg-center shrink-0" style={{ backgroundImage: `url(${col.imageUrl})` }}></div>
+                                                    <div className="flex-1 min-w-0">
+                                                        <p className="font-medium text-slate-900 dark:text-slate-100 truncate">{col.title}</p>
+                                                        <p className="text-xs text-slate-500 dark:text-slate-400">{col.artifacts?.length || 0} items</p>
+                                                    </div>
+                                                    <Plus size={18} className="text-slate-400 group-hover:text-primary opacity-0 group-hover:opacity-100 transition-all" />
+                                                </button>
+                                            ))}
+                                        </div>
+                                    ) : (
+                                        <div className="text-center py-6 text-slate-500">
+                                            <FolderPlus size={32} className="mx-auto mb-2 opacity-50" />
+                                            <p>No collections yet.</p>
+                                        </div>
+                                    )}
+
+                                    <Button
+                                        variant="secondary"
+                                        className="w-full justify-center mt-2 border-dashed"
+                                        onClick={() => setView('create')}
+                                        icon={Plus}
+                                    >
+                                        Create New Collection
+                                    </Button>
+                                </div>
+                            ) : (
+                                <form onSubmit={handleCreateCollection} className="space-y-4">
+                                    <Input
+                                        label="Collection Name"
+                                        placeholder="e.g. Ancient Pottery"
+                                        value={newCollectionTitle}
+                                        onChange={(e) => setNewCollectionTitle(e.target.value)}
+                                        autoFocus
+                                        required
+                                    />
+                                    <div className="flex gap-2 justify-end pt-2">
+                                        <Button variant="ghost" type="button" onClick={() => setView('list')}>Back</Button>
+                                        <Button variant="primary" type="submit" disabled={!newCollectionTitle.trim() || loading}>
+                                            Create Collection
+                                        </Button>
+                                    </div>
+                                </form>
+                            )}
+                        </>
                     )}
                 </div>
             </div>
