@@ -16,14 +16,14 @@ const CollectionsPage = () => {
     const [createForm, setCreateForm] = useState({ title: '', description: '', imageUrl: '' });
     const [isCreating, setIsCreating] = useState(false);
     const [uploadingImage, setUploadingImage] = useState(false);
-    const [filter, setFilter] = useState('all');
 
     useEffect(() => {
         const fetchCollections = async () => {
             setLoading(true);
             try {
-                const endpoint = user && filter === 'mine' ? '/collections/my' : '/collections';
-                const { data } = await api.get(endpoint);
+                // Since this page is now protected and backend only returns user's collections,
+                // we can just call /collections
+                const { data } = await api.get('/collections');
                 setCollections(data);
             } catch (error) {
                 console.error('Failed to fetch collections', error);
@@ -33,7 +33,7 @@ const CollectionsPage = () => {
         };
 
         fetchCollections();
-    }, [user, filter]);
+    }, [user]);
 
     const handleImageUpload = async (e) => {
         const file = e.target.files[0];
@@ -76,8 +76,8 @@ const CollectionsPage = () => {
             {/* PageHeading */}
             <div className="flex flex-wrap justify-between items-center gap-4 mb-8">
                 <div className="flex flex-col gap-2">
-                    <p className="text-slate-900 dark:text-white text-4xl font-black leading-tight tracking-[-0.033em]">Collections</p>
-                    <p className="text-slate-500 dark:text-slate-400 text-base font-normal leading-normal">Curated archives of cultural heritage artifacts.</p>
+                    <p className="text-slate-900 dark:text-white text-4xl font-black leading-tight tracking-[-0.033em]">My Collections</p>
+                    <p className="text-slate-500 dark:text-slate-400 text-base font-normal leading-normal">Manage your curated archives of cultural heritage artifacts.</p>
                 </div>
                 {user && (
                     <button
@@ -86,30 +86,6 @@ const CollectionsPage = () => {
                     >
                         <Plus size={18} />
                         <span className="truncate">Create New Collection</span>
-                    </button>
-                )}
-            </div>
-
-            {/* Chips */}
-            <div className="flex gap-2 p-1 overflow-x-auto mb-8">
-                <button
-                    onClick={() => setFilter('all')}
-                    className={`flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-lg px-4 shadow-sm transition-colors ${filter === 'all'
-                            ? 'bg-primary/20 text-primary'
-                            : 'bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700'
-                        }`}
-                >
-                    <p className="text-sm font-medium leading-normal">All</p>
-                </button>
-                {user && (
-                    <button
-                        onClick={() => setFilter('mine')}
-                        className={`flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-lg px-4 shadow-sm transition-colors ${filter === 'mine'
-                                ? 'bg-primary/20 text-primary'
-                                : 'bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700'
-                            }`}
-                    >
-                        <p className="text-sm font-medium leading-normal">My Collections</p>
                     </button>
                 )}
             </div>
@@ -146,7 +122,7 @@ const CollectionsPage = () => {
             ) : (
                 <div className="text-center py-16 bg-slate-50 dark:bg-slate-900/40 rounded-xl border border-dashed border-slate-200 dark:border-slate-800">
                     <p className="text-slate-500 mb-4">
-                        {filter === 'mine' ? "You haven't created any collections yet." : "No collections found."}
+                        You haven't created any collections yet.
                     </p>
                     {user && (
                         <Button variant="primary" onClick={() => setIsCreateModalOpen(true)}>

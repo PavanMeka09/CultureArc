@@ -9,19 +9,15 @@ const ExplorePage = () => {
     const [artifacts, setArtifacts] = useState([]);
     const [keyword, setKeyword] = useState('');
     const [category, setCategory] = useState('');
-    const [era, setEra] = useState('');
-    const [region, setRegion] = useState('');
     const [page, setPage] = useState(1);
     const [pages, setPages] = useState(1);
     const [isLoading, setIsLoading] = useState(true);
 
-    const hasActiveFilters = keyword || category || era || region;
+    const hasActiveFilters = keyword || category;
 
     const clearFilters = () => {
         setKeyword('');
         setCategory('');
-        setEra('');
-        setRegion('');
     };
 
     // Debounce search to avoid too many requests
@@ -31,8 +27,6 @@ const ExplorePage = () => {
             const params = {
                 keyword,
                 category,
-                era,
-                region,
                 page,
             };
 
@@ -56,11 +50,11 @@ const ExplorePage = () => {
         }, 500); // 500ms debounce
 
         return () => clearTimeout(timeoutId);
-    }, [keyword, category, era, region, page]);
+    }, [keyword, category, page]);
 
     useEffect(() => {
         setPage(1);
-    }, [keyword, category, era, region]);
+    }, [keyword, category]);
 
     return (
         <div className="flex flex-col flex-1 py-10">
@@ -104,31 +98,6 @@ const ExplorePage = () => {
                         <option value="Tool">Tool</option>
                         <option value="Writing">Writing</option>
                         <option value="Monument">Monument</option>
-                    </select>
-                    <select
-                        value={era}
-                        onChange={(e) => setEra(e.target.value)}
-                        className="flex h-10 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-4 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors text-slate-900 dark:text-gray-300 text-sm font-medium leading-normal cursor-pointer appearance-none outline-none focus:ring-2 focus:ring-primary/20"
-                    >
-                        <option value="">All Eras</option>
-                        <option value="Ancient">Ancient</option>
-                        <option value="Medieval">Medieval</option>
-                        <option value="Renaissance">Renaissance</option>
-                        <option value="Modern">Modern</option>
-                        <option value="Contemporary">Contemporary</option>
-                    </select>
-                    <select
-                        value={region}
-                        onChange={(e) => setRegion(e.target.value)}
-                        className="flex h-10 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-4 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors text-slate-900 dark:text-gray-300 text-sm font-medium leading-normal cursor-pointer appearance-none outline-none focus:ring-2 focus:ring-primary/20"
-                    >
-                        <option value="">All Regions</option>
-                        <option value="Asia">Asia</option>
-                        <option value="Europe">Europe</option>
-                        <option value="Africa">Africa</option>
-                        <option value="Americas">Americas</option>
-                        <option value="Middle East">Middle East</option>
-                        <option value="Oceania">Oceania</option>
                     </select>
                     {hasActiveFilters && (
                         <Button

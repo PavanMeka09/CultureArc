@@ -27,11 +27,12 @@ function App() {
         <Routes>
           <Route element={<Layout />}>
             <Route path="/" element={<HomePage />} />
+            <Route path="/" element={<HomePage />} />
             <Route path="/explore" element={<ExplorePage />} />
-            <Route path="/collections" element={<CollectionsPage />} />
-            <Route path="/collection/:id" element={<CollectionDetailPage />} />
             {/* Protected Routes */}
             <Route element={<PrivateRoute />}>
+              <Route path="/collections" element={<CollectionsPage />} />
+              <Route path="/collection/:id" element={<CollectionDetailPage />} />
               <Route path="/upload" element={<ArtifactUploadPage />} />
               <Route path="/edit-artifact/:id" element={<ArtifactUploadPage />} />
               <Route path="/profile" element={<ProfilePage />} />

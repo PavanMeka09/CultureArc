@@ -22,14 +22,6 @@ const getArtifacts = asyncHandler(async (req, res) => {
         category: { $regex: req.query.category, $options: 'i' }
     } : {};
 
-    const era = req.query.era ? {
-        era: { $regex: req.query.era, $options: 'i' }
-    } : {};
-
-    const region = req.query.region ? {
-        region: { $regex: req.query.region, $options: 'i' }
-    } : {};
-
     // Status filter - default to approved for public, allow 'all' or specific status for admin
     let statusFilter = {};
     if (req.query.status === 'all') {
@@ -42,8 +34,8 @@ const getArtifacts = asyncHandler(async (req, res) => {
         statusFilter = { status: 'approved' };
     }
 
-    const count = await Artifact.countDocuments({ ...keyword, ...category, ...era, ...region, ...statusFilter });
-    const artifacts = await Artifact.find({ ...keyword, ...category, ...era, ...region, ...statusFilter })
+    const count = await Artifact.countDocuments({ ...keyword, ...category, ...statusFilter });
+    const artifacts = await Artifact.find({ ...keyword, ...category, ...statusFilter })
         .sort({ createdAt: -1 })
         .limit(pageSize)
         .skip(pageSize * (page - 1));

@@ -18,21 +18,24 @@ const {
     addArtifactToCollectionSchema
 } = require('../utils/validation');
 
+// All routes require authentication
+router.use(protect);
+
 router.route('/')
     .get(getCollections)
-    .post(protect, validateRequest(collectionSchema), createCollection);
+    .post(validateRequest(collectionSchema), createCollection);
 
-router.route('/my').get(protect, getMyCollections);
+router.route('/my').get(getMyCollections);
 
 router.route('/:id')
     .get(getCollectionById)
-    .put(protect, validateRequest(collectionUpdateSchema), updateCollection)
-    .delete(protect, deleteCollection);
+    .put(validateRequest(collectionUpdateSchema), updateCollection)
+    .delete(deleteCollection);
 
 router.route('/:id/artifacts')
-    .post(protect, validateRequest(addArtifactToCollectionSchema), addArtifactToCollection);
+    .post(validateRequest(addArtifactToCollectionSchema), addArtifactToCollection);
 
 router.route('/:id/artifacts/:artifactId')
-    .delete(protect, removeArtifactFromCollection);
+    .delete(removeArtifactFromCollection);
 
 module.exports = router;

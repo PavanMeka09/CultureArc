@@ -1,21 +1,26 @@
 const asyncHandler = require('express-async-handler');
 const Collection = require('../models/Collection');
 
-// @desc    Fetch all collections
+// @desc    Fetch logged in user's collections
 // @route   GET /api/collections
-// @access  Public
+// @access  Private
 const getCollections = asyncHandler(async (req, res) => {
-    const collections = await Collection.find({}).populate('artifacts');
+    const collections = await Collection.find({ user: req.user._id }).populate('artifacts');
     res.json(collections);
 });
 
-// @desc    Fetch single collection
+// @desc    Fetch single collection (if owned by user)
 // @route   GET /api/collections/:id
-// @access  Public
+// @access  Private
 const getCollectionById = asyncHandler(async (req, res) => {
     const collection = await Collection.findById(req.params.id).populate('artifacts');
 
     if (collection) {
+        // Check ownership
+        if (collection.user.toString() !== req.user._id.toString() && !req.user.isAdmin) {
+            res.status(403); // Use 403 Forbidden instead of 401 Unauthorized for permissions
+            throw new Error('Not authorized to access this collection');
+        }
         res.json(collection);
     } else {
         res.status(404);
