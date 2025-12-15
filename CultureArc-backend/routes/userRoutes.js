@@ -7,17 +7,15 @@ const {
     updateUserProfile,
     changePassword,
     forgotPassword,
+    verifyResetOtp,
     resetPassword,
-    verifyEmail,
-    resendVerification,
+    initiateSignup,
+    verifySignupOtp,
+    completeSignup,
     getLikedArtifacts,
     getUsers,
     deleteUser,
-    updateUser,
-    // New signup flows
-    initiateSignup,
-    verifySignupOtp,
-    completeSignup
+    updateUser
 } = require('../controllers/userController');
 const { protect, admin } = require('../middleware/authMiddleware');
 const { validateRequest } = require('../middleware/validateRequest');
@@ -29,7 +27,6 @@ const {
     resetPasswordSchema,
     profileUpdateSchema,
     adminUpdateUserSchema,
-    resendVerificationSchema,
     // New schemas
     initiateSignupSchema,
     verifyOtpSchema,
@@ -37,18 +34,10 @@ const {
 } = require('../utils/validation');
 
 // Public routes
-// router.post('/', validateRequest(registerSchema), registerUser); // Deprecated
-router.post('/initiate-signup', validateRequest(initiateSignupSchema), initiateSignup);
-router.post('/verify-signup-otp', validateRequest(verifyOtpSchema), verifySignupOtp);
-router.post('/complete-signup', validateRequest(completeSignupSchema), completeSignup);
-
 router.post('/login', validateRequest(loginSchema), authUser);
 router.post('/forgot-password', validateRequest(forgotPasswordSchema), forgotPassword);
-router.post('/reset-password/:token', validateRequest(resetPasswordSchema), resetPassword);
-router.get('/verify/:token', verifyEmail); // Keep just in case for old links? Or maybe remove if totally replacing system.
-// Verify token links from old system might still be floating around, but we can't easily support them if we remove the logic. 
-// Actually verifyEmail controller logic is still there. 
-router.post('/resend-verification', validateRequest(resendVerificationSchema), resendVerification);
+router.post('/verify-reset-otp', validateRequest(verifyOtpSchema), verifyResetOtp);
+router.post('/reset-password', validateRequest(resetPasswordSchema), resetPassword);
 
 // Protected routes
 router.route('/profile')

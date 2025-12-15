@@ -115,5 +115,19 @@ module.exports = {
             </div>
         `;
         return sendEmail({ to: email, subject, text, html });
+    },
+    sendPasswordResetOtpEmail: async (email, otp) => {
+        const subject = 'CultureArc Password Reset Code';
+        const text = `Your password reset code is: ${otp}\n\nThis code expires in 15 minutes. If you did not request this, please ignore this email.`;
+        const html = `
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                <h1 style="color: #8B5CF6;">Password Reset Request</h1>
+                <p>You requested to reset your password. Use the following code to proceed:</p>
+                <div style="font-size: 32px; font-weight: bold; letter-spacing: 5px; color: #8B5CF6; margin: 20px 0;">${otp}</div>
+                <p>This code expires in 15 minutes.</p>
+                <p style="color: #666; font-size: 12px;">If you did not request a password reset, you can safely ignore this email.</p>
+            </div>
+        `;
+        return sendEmail({ to: email, subject, text, html });
     }
 };

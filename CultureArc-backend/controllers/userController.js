@@ -6,7 +6,7 @@ const Artifact = require('../models/Artifact');
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken'); // Added jwt require
-const { sendVerificationEmail, sendPasswordResetEmail, sendOtpEmail } = require('../utils/sendEmail');
+const { sendVerificationEmail, sendPasswordResetEmail, sendOtpEmail, sendPasswordResetOtpEmail } = require('../utils/sendEmail');
 
 // @desc    Auth user & get token
 // @route   POST /api/users/login
@@ -247,7 +247,7 @@ const changePassword = asyncHandler(async (req, res) => {
     res.json({ message: 'Password updated successfully' });
 });
 
-// @desc    Forgot password - generate reset token
+// @desc    Forgot password - generate reset OTP
 // @route   POST /api/users/forgot-password
 // @access  Public
 const forgotPassword = asyncHandler(async (req, res) => {
@@ -259,96 +259,97 @@ const forgotPassword = asyncHandler(async (req, res) => {
         throw new Error('User not found');
     }
 
-    // Generate reset token
-    const resetToken = crypto.randomBytes(32).toString('hex');
-    user.resetPasswordToken = resetToken;
-    user.resetPasswordExpire = Date.now() + 3600000; // 1 hour
+    // Generate 6 digit OTP
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+
+    // Store OTP in reset token field (reusing existing fields)
+    user.resetPasswordToken = otp;
+    user.resetPasswordExpire = Date.now() + 15 * 60 * 1000; // 15 minutes
     await user.save();
 
-    // Send password reset email
-    const resetUrl = `${process.env.FRONTEND_URL || 'http://localhost:5173'}/reset-password/${resetToken}`;
-    await sendPasswordResetEmail(user, resetUrl);
+    // Send password reset OTP email
+    await sendPasswordResetOtpEmail(email, otp);
 
     res.json({
-        message: 'Password reset email sent. Please check your inbox.'
+        message: 'Password reset code sent to your email.'
     });
 });
 
-// @desc    Reset password with token
-// @route   POST /api/users/reset-password/:token
+// @desc    Verify reset password OTP
+// @route   POST /api/users/verify-reset-otp
 // @access  Public
-const resetPassword = asyncHandler(async (req, res) => {
-    const { token } = req.params;
-    const { password } = req.body;
+const verifyResetOtp = asyncHandler(async (req, res) => {
+    const { email, otp } = req.body;
 
     const user = await User.findOne({
-        resetPasswordToken: token,
+        email,
+        resetPasswordToken: otp,
         resetPasswordExpire: { $gt: Date.now() }
     });
 
     if (!user) {
         res.status(400);
+        throw new Error('Invalid or expired reset code');
+    }
+
+    // Generate a temporary reset token (JWT) allowing password change
+    const resetToken = jwt.sign(
+        { id: user._id, type: 'password_reset' },
+        process.env.JWT_SECRET,
+        { expiresIn: '15m' }
+    );
+
+    // We don't clear the OTP effectively until password is reset or it expires, 
+    // but the JWT is now the key.
+    // Optionally, we could clear it now, but keeping it allows retry if FE fails before step 3?
+    // Let's clear it in the final step.
+
+    res.json({
+        message: 'OTP verified successfully',
+        resetToken
+    });
+});
+
+// @desc    Reset password with verified token
+// @route   POST /api/users/reset-password
+// @access  Public
+const resetPassword = asyncHandler(async (req, res) => {
+    const { resetToken, password } = req.body;
+
+    let decoded;
+    try {
+        decoded = jwt.verify(resetToken, process.env.JWT_SECRET);
+    } catch (error) {
+        res.status(401);
         throw new Error('Invalid or expired reset token');
     }
 
-    // Hash new password
-    const salt = await bcrypt.genSalt(10);
-    user.password = await bcrypt.hash(password, salt);
-    user.resetPasswordToken = undefined;
-    user.resetPasswordExpire = undefined;
-    await user.save();
-
-    res.json({ message: 'Password reset successful' });
-});
-
-// @desc    Verify email
-// @route   GET /api/users/verify/:token
-// @access  Public
-const verifyEmail = asyncHandler(async (req, res) => {
-    const { token } = req.params;
-
-    const user = await User.findOne({ verificationToken: token });
-
-    if (!user) {
-        res.status(400);
-        throw new Error('Invalid verification token');
+    if (decoded.type !== 'password_reset') {
+        res.status(401);
+        throw new Error('Invalid token type');
     }
 
-    user.isVerified = true;
-    user.verificationToken = undefined;
-    await user.save();
-
-    res.json({ message: 'Email verified successfully' });
-});
-
-// @desc    Resend verification email
-// @route   POST /api/users/resend-verification
-// @access  Public
-const resendVerification = asyncHandler(async (req, res) => {
-    const { email } = req.body;
-    const user = await User.findOne({ email });
+    const user = await User.findById(decoded.id);
 
     if (!user) {
         res.status(404);
         throw new Error('User not found');
     }
 
-    if (user.isVerified) {
-        res.status(400);
-        throw new Error('Email is already verified');
-    }
+    // Hash new password
+    const salt = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(password, salt);
 
-    // Generate new verification token
-    const verificationToken = crypto.randomBytes(32).toString('hex');
-    user.verificationToken = verificationToken;
+    // Clear reset fields
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpire = undefined;
+
     await user.save();
 
-    // Send verification email
-    const verificationUrl = `${process.env.FRONTEND_URL || 'http://localhost:5173'}/verify-email/${verificationToken}`;
-    await sendVerificationEmail(user, verificationUrl);
-
-    res.json({ message: 'Verification email sent. Please check your inbox.' });
+    res.json({ message: 'Password reset successful' });
 });
+
+
 
 // @desc    Get artifacts liked by user
 // @route   GET /api/users/liked
@@ -413,12 +414,10 @@ module.exports = {
     updateUserProfile,
     changePassword,
     forgotPassword,
+    verifyResetOtp,
     resetPassword,
-    verifyEmail,
-    resendVerification,
     getLikedArtifacts,
     getUsers,
-    deleteUser,
     deleteUser,
     updateUser,
     // New signup flows

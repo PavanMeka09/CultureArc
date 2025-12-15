@@ -1,18 +1,7 @@
 const { z } = require('zod');
 
 // User Schemas
-const registerSchema = z.object({
-    name: z.string()
-        .min(2, 'Name must be at least 2 characters')
-        .max(50, 'Name must be at most 50 characters')
-        .trim(),
-    email: z.string()
-        .email('Invalid email format')
-        .toLowerCase()
-        .trim(),
-    password: z.string()
-        .min(6, 'Password must be at least 6 characters')
-});
+
 
 const loginSchema = z.object({
     email: z.string()
@@ -38,6 +27,8 @@ const forgotPasswordSchema = z.object({
 });
 
 const resetPasswordSchema = z.object({
+    resetToken: z.string()
+        .min(1, 'Reset token is required'),
     password: z.string()
         .min(6, 'Password must be at least 6 characters')
 });
@@ -164,23 +155,18 @@ const addArtifactToCollectionSchema = z.object({
 });
 
 // Resend verification schema
-const resendVerificationSchema = z.object({
-    email: z.string()
-        .email('Invalid email format')
-        .toLowerCase()
-        .trim()
-});
+
 
 module.exports = {
     // User schemas
-    registerSchema,
+    // User schemas
     loginSchema,
     changePasswordSchema,
     forgotPasswordSchema,
     resetPasswordSchema,
     profileUpdateSchema,
     adminUpdateUserSchema,
-    resendVerificationSchema,
+    adminUpdateUserSchema,
     // Artifact schemas
     artifactSchema,
     artifactUpdateSchema,

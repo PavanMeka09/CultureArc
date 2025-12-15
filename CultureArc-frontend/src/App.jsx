@@ -11,9 +11,8 @@ import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
 import AdminPage from './pages/AdminPage';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
-import ResetPasswordPage from './pages/ResetPasswordPage';
-import VerifyEmailPage from './pages/VerifyEmailPage';
-import VerifyEmailPendingPage from './pages/VerifyEmailPendingPage';
+
+
 import Layout from './components/layout/Layout';
 import PrivateRoute from './components/common/PrivateRoute';
 import { ThemeProvider } from './context/ThemeContext';
@@ -27,7 +26,7 @@ function App() {
         <Routes>
           <Route element={<Layout />}>
             <Route path="/" element={<HomePage />} />
-            <Route path="/" element={<HomePage />} />
+
             <Route path="/explore" element={<ExplorePage />} />
             {/* Protected Routes */}
             <Route element={<PrivateRoute />}>
@@ -41,15 +40,11 @@ function App() {
 
             {/* Public Routes */}
             <Route path="/artifact/:id" element={<ArtifactDetailPage />} />
-            {/* Kept specifically for demo purposes if needed, can likely be removed */}
-            <Route path="/artifact-detail" element={<ArtifactDetailPage />} />
+
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage />} />
             <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-            <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
-            {/* Email Verification Routes */}
-            <Route path="/verify-email/:token" element={<VerifyEmailPage />} />
-            <Route path="/verify-email-pending" element={<VerifyEmailPendingPage />} />
+
           </Route>
         </Routes>
       </AuthProvider>

@@ -7,8 +7,7 @@ const {
     updateCollection,
     deleteCollection,
     addArtifactToCollection,
-    removeArtifactFromCollection,
-    getMyCollections
+    removeArtifactFromCollection
 } = require('../controllers/collectionController');
 const { protect } = require('../middleware/authMiddleware');
 const { validateRequest } = require('../middleware/validateRequest');
@@ -25,7 +24,7 @@ router.route('/')
     .get(getCollections)
     .post(validateRequest(collectionSchema), createCollection);
 
-router.route('/my').get(getMyCollections);
+
 
 router.route('/:id')
     .get(getCollectionById)

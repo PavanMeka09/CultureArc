@@ -150,13 +150,7 @@ const removeArtifactFromCollection = asyncHandler(async (req, res) => {
     res.json(updatedCollection);
 });
 
-// @desc    Get logged in user's collections
-// @route   GET /api/collections/my
-// @access  Private
-const getMyCollections = asyncHandler(async (req, res) => {
-    const collections = await Collection.find({ user: req.user._id }).populate('artifacts');
-    res.json(collections);
-});
+
 
 module.exports = {
     getCollections,
@@ -165,6 +159,5 @@ module.exports = {
     updateCollection,
     deleteCollection,
     addArtifactToCollection,
-    removeArtifactFromCollection,
-    getMyCollections
+    removeArtifactFromCollection
 };
