@@ -21,8 +21,12 @@ const LoginPage = () => {
             navigate('/');
         } catch (err) {
             // Handle validation errors from Zod
-            const message = err.response?.data?.errors?.[0] || err.response?.data?.message || 'Failed to login';
-            setError(message);
+            if (err.response?.data?.errors?.[0]) {
+                const cleanMsg = err.response.data.errors[0].replace(/^[^:]+:\s*/, '');
+                setError(cleanMsg);
+            } else {
+                setError(err.response?.data?.message || 'Failed to login');
+            }
         } finally {
             setLoading(false);
         }

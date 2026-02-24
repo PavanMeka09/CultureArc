@@ -68,7 +68,7 @@ const HomePage = () => {
                             <div className="flex items-center justify-center h-16 w-16 rounded-2xl bg-teal-100 dark:bg-teal-900/30 text-teal-600 dark:text-teal-400 mb-6 group-hover:scale-110 transition-transform duration-300">
                                 <Users size={32} />
                             </div>
-                            <h3 className="text-xl font-bold text-text-light dark:text-white mb-3">Share Culture</h3>
+                            <h3 className="text-xl font-bold text-text-light dark:text-white mb-3">Take part in Discussion</h3>
                             <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
                                 Contribute your own threads to the human tapestry. Share artifacts, oral histories, and traditions to foster global understanding and appreciation.
                             </p>

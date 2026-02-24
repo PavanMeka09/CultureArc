@@ -5,6 +5,7 @@ import api from '../api/axios';
 import Button from '../components/common/Button';
 import Input from '../components/common/Input';
 import OtpInput from '../components/common/OtpInput';
+import PasswordRequirements from '../components/common/PasswordRequirements';
 
 const ForgotPasswordPage = () => {
     const navigate = useNavigate();
@@ -31,7 +32,12 @@ const ForgotPasswordPage = () => {
             setMessage(`We sent a code to ${email}`);
             setStep(2);
         } catch (err) {
-            setError(err.response?.data?.message || 'Failed to send reset code');
+            if (err.response?.data?.errors && Array.isArray(err.response.data.errors)) {
+                const cleanErrors = err.response.data.errors.map(msg => msg.replace(/^[^:]+:\s*/, ''));
+                setError(cleanErrors.join('. '));
+            } else {
+                setError(err.response?.data?.message || 'Failed to send reset code');
+            }
         } finally {
             setLoading(false);
         }
@@ -47,7 +53,12 @@ const ForgotPasswordPage = () => {
             setResetToken(data.resetToken);
             setStep(3);
         } catch (err) {
-            setError(err.response?.data?.message || 'Invalid code');
+            if (err.response?.data?.errors && Array.isArray(err.response.data.errors)) {
+                const cleanErrors = err.response.data.errors.map(msg => msg.replace(/^[^:]+:\s*/, ''));
+                setError(cleanErrors.join('. '));
+            } else {
+                setError(err.response?.data?.message || 'Invalid code');
+            }
         } finally {
             setLoading(false);
         }
@@ -63,8 +74,15 @@ const ForgotPasswordPage = () => {
             return;
         }
 
-        if (password.length < 6) {
-            setError('Password must be at least 6 characters');
+        // Validate password complexity
+        const isPasswordValid =
+            password.length >= 8 &&
+            /[A-Z]/.test(password) &&
+            /[0-9]/.test(password) &&
+            /[!@#$%^&*(),.?":{}|<>]/.test(password);
+
+        if (!isPasswordValid) {
+            setError('Please meet all password requirements');
             return;
         }
 
@@ -81,7 +99,12 @@ const ForgotPasswordPage = () => {
                 navigate('/login');
             }, 3000);
         } catch (err) {
-            setError(err.response?.data?.message || 'Failed to reset password');
+            if (err.response?.data?.errors && Array.isArray(err.response.data.errors)) {
+                const cleanErrors = err.response.data.errors.map(msg => msg.replace(/^[^:]+:\s*/, ''));
+                setError(cleanErrors.join('. ')); // Display as dot-separated string for simplicity in this layout
+            } else {
+                setError(err.response?.data?.message || 'Failed to reset password');
+            }
         } finally {
             setLoading(false);
         }
@@ -189,6 +212,8 @@ const ForgotPasswordPage = () => {
                                 placeholder="******"
                                 required
                             />
+                            <PasswordRequirements password={password} />
+
                             <Button type="submit" variant="primary" className="w-full" loading={loading}>
                                 Reset Password <Check className="ml-2 h-4 w-4" />
                             </Button>

@@ -6,15 +6,15 @@ import Button from '../common/Button';
 import api from '../../api/axios';
 import { useAuth } from '../../context/AuthContext';
 import { Check, ArrowRight, ArrowLeft } from 'lucide-react';
+import PasswordRequirements from '../common/PasswordRequirements';
 
 const SignupWizard = () => {
     const navigate = useNavigate();
     const { setAuth } = useAuth();
-
-
     const [step, setStep] = useState(1);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
+    const [apiErrors, setApiErrors] = useState([]); // Store array of errors
 
     // Form States
     const [name, setName] = useState('');
@@ -24,15 +24,26 @@ const SignupWizard = () => {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [signupToken, setSignupToken] = useState('');
 
+    // Password Validation States
+    const passwordRequirements = [
+        { label: "At least 8 characters", valid: password.length >= 8 },
+        { label: "At least one uppercase letter", valid: /[A-Z]/.test(password) },
+        { label: "At least one number", valid: /[0-9]/.test(password) },
+        { label: "At least one special character", valid: /[!@#$%^&*(),.?":{}|<>]/.test(password) },
+    ];
+
+    const isPasswordValid = passwordRequirements.every(req => req.valid);
+
     const handleInitiateSignup = async (e) => {
         e.preventDefault();
         setError('');
+        setApiErrors([]);
         setLoading(true);
         try {
             await api.post('/users/initiate-signup', { name, email });
             setStep(2);
         } catch (err) {
-            setError(err.response?.data?.message || 'Failed to send OTP.');
+            handleApiError(err);
         } finally {
             setLoading(false);
         }
@@ -41,13 +52,14 @@ const SignupWizard = () => {
     const handleVerifyOtp = async (e) => {
         e.preventDefault();
         setError('');
+        setApiErrors([]);
         setLoading(true);
         try {
             const { data } = await api.post('/users/verify-signup-otp', { email, otp });
             setSignupToken(data.signupToken);
             setStep(3);
         } catch (err) {
-            setError(err.response?.data?.message || 'Invalid OTP.');
+            handleApiError(err);
         } finally {
             setLoading(false);
         }
@@ -56,14 +68,15 @@ const SignupWizard = () => {
     const handleCompleteSignup = async (e) => {
         e.preventDefault();
         setError('');
+        setApiErrors([]);
 
         if (password !== confirmPassword) {
             setError('Passwords do not match');
             return;
         }
 
-        if (password.length < 6) {
-            setError('Password must be at least 6 characters');
+        if (!isPasswordValid) {
+            setError('Please meet all password requirements');
             return;
         }
 
@@ -80,9 +93,19 @@ const SignupWizard = () => {
             navigate('/');
 
         } catch (err) {
-            setError(err.response?.data?.message || 'Failed to complete registration.');
+            handleApiError(err);
         } finally {
             setLoading(false);
+        }
+    };
+
+    const handleApiError = (err) => {
+        if (err.response?.data?.errors && Array.isArray(err.response.data.errors)) {
+            // Strip the "field: " prefix from messages for cleaner UI
+            const cleanErrors = err.response.data.errors.map(msg => msg.replace(/^[^:]+:\s*/, ''));
+            setApiErrors(cleanErrors);
+        } else {
+            setError(err.response?.data?.message || 'Something went wrong.');
         }
     };
 
@@ -100,9 +123,21 @@ const SignupWizard = () => {
                 {step === 3 && 'Secure your account'}
             </p>
 
+            {/* General Error Message */}
             {error && (
                 <div className="bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 p-3 rounded-lg text-sm mb-4">
                     {error}
+                </div>
+            )}
+
+            {/* Specific API Errors */}
+            {apiErrors.length > 0 && (
+                <div className="bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 p-3 rounded-lg text-sm mb-4">
+                    <ul className="list-disc list-inside">
+                        {apiErrors.map((err, index) => (
+                            <li key={index}>{err}</li>
+                        ))}
+                    </ul>
                 </div>
             )}
 
@@ -154,11 +189,11 @@ const SignupWizard = () => {
             {step === 3 && (
                 <form onSubmit={handleCompleteSignup} className="space-y-4">
                     <Input
-                        label="Min 6 characters"
+                        label="Password"
                         type="password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        placeholder="Password"
+                        placeholder="Create a strong password"
                         required
                     />
                     <Input
@@ -169,7 +204,15 @@ const SignupWizard = () => {
                         placeholder="Confirm Password"
                         required
                     />
-                    <Button type="submit" variant="primary" className="w-full justify-center mt-6" loading={loading}>
+                    <PasswordRequirements password={password} />
+
+                    <Button
+                        type="submit"
+                        variant="primary"
+                        className="w-full justify-center mt-6"
+                        loading={loading}
+                        disabled={!isPasswordValid || password !== confirmPassword}
+                    >
                         Create Account
                     </Button>
                 </form>

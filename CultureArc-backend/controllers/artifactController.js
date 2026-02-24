@@ -1,6 +1,5 @@
 const asyncHandler = require('express-async-handler');
 const Artifact = require('../models/Artifact');
-const { reviewArtifactContent, determineStatus } = require('../utils/aiReview');
 
 // @desc    Fetch all artifacts with optional filters
 // @route   GET /api/artifacts
@@ -68,7 +67,7 @@ const getArtifactById = asyncHandler(async (req, res) => {
     const artifact = await Artifact.findById(req.params.id);
 
     if (artifact) {
-        res.json(artifact);
+        res.json(artifact)  ;
     } else {
         res.status(404);
         throw new Error('Artifact not found');

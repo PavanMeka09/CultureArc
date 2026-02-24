@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Heart, Upload, Eye, EyeOff } from 'lucide-react';
+import { Heart, Upload } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import api from '../api/axios';
 import Button from '../components/common/Button';
 import Modal from '../components/common/Modal';
 import Input from '../components/common/Input';
 import { ArtifactGridSkeleton } from '../components/common/Skeleton';
+import PasswordRequirements from '../components/common/PasswordRequirements';
 
 const ProfilePage = () => {
     const { user } = useAuth();
@@ -19,8 +20,6 @@ const ProfilePage = () => {
     const [isChangingPassword, setIsChangingPassword] = useState(false);
     const [passwordError, setPasswordError] = useState('');
     const [passwordSuccess, setPasswordSuccess] = useState('');
-    const [showCurrentPassword, setShowCurrentPassword] = useState(false);
-    const [showNewPassword, setShowNewPassword] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -59,8 +58,14 @@ const ProfilePage = () => {
             return;
         }
 
-        if (passwordForm.newPassword.length < 6) {
-            setPasswordError('Password must be at least 6 characters');
+        const isPasswordValid =
+            passwordForm.newPassword.length >= 8 &&
+            /[A-Z]/.test(passwordForm.newPassword) &&
+            /[0-9]/.test(passwordForm.newPassword) &&
+            /[!@#$%^&*(),.?":{}|<>]/.test(passwordForm.newPassword);
+
+        if (!isPasswordValid) {
+            setPasswordError('Password must meet all complexity requirements');
             return;
         }
 
@@ -77,7 +82,12 @@ const ProfilePage = () => {
                 setPasswordSuccess('');
             }, 1500);
         } catch (error) {
-            setPasswordError(error.response?.data?.message || 'Failed to change password');
+            if (error.response?.data?.errors && Array.isArray(error.response.data.errors)) {
+                const cleanErrors = error.response.data.errors.map(msg => msg.replace(/^[^:]+:\s*/, ''));
+                setPasswordError(cleanErrors.join('. '));
+            } else {
+                setPasswordError(error.response?.data?.message || 'Failed to change password');
+            }
         } finally {
             setIsChangingPassword(false);
         }
@@ -241,35 +251,23 @@ const ProfilePage = () => {
                     <div className="relative">
                         <Input
                             label="Current Password"
-                            type={showCurrentPassword ? 'text' : 'password'}
+                            type="password"
                             value={passwordForm.currentPassword}
                             onChange={(e) => setPasswordForm({ ...passwordForm, currentPassword: e.target.value })}
                             placeholder="Enter current password"
                         />
-                        <button
-                            type="button"
-                            onClick={() => setShowCurrentPassword(!showCurrentPassword)}
-                            className="absolute right-3 top-9 text-slate-500 hover:text-slate-700"
-                        >
-                            {showCurrentPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                        </button>
                     </div>
                     <div className="relative">
                         <Input
                             label="New Password"
-                            type={showNewPassword ? 'text' : 'password'}
+                            type="password"
                             value={passwordForm.newPassword}
                             onChange={(e) => setPasswordForm({ ...passwordForm, newPassword: e.target.value })}
                             placeholder="Enter new password"
                         />
-                        <button
-                            type="button"
-                            onClick={() => setShowNewPassword(!showNewPassword)}
-                            className="absolute right-3 top-9 text-slate-500 hover:text-slate-700"
-                        >
-                            {showNewPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                        </button>
                     </div>
+
+                    <PasswordRequirements password={passwordForm.newPassword} />
                     <Input
                         label="Confirm New Password"
                         type="password"
