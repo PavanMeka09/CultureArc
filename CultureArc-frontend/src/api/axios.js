@@ -2,6 +2,7 @@ import axios from 'axios';
 
 const api = axios.create({
     baseURL: '/api',
+    // baseURL: import.meta.env.VITE_API_BASE_URL || 'https://culturearc.onrender.com/api',
 });
 
 // Add a request interceptor to attach the token if it exists
