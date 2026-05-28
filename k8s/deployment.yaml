@@ -36,7 +36,7 @@ spec:
       containers:
       - name: backend
         # REPLACE 'your-dockerhub-username' with your actual Docker Hub account name
-        image: your-dockerhub-username/culturearc-backend:latest
+        image: pavanmeka09/culturearc-backend:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 5000
@@ -57,7 +57,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: culturearc-backend-service
+  name: backend
 spec:
   selector:
     app: culturearc-backend
@@ -89,7 +89,7 @@ spec:
       containers:
       - name: frontend
         # REPLACE 'your-dockerhub-username' with your actual Docker Hub account name
-        image: your-dockerhub-username/culturearc-frontend:latest
+        image: pavanmeka09/culturearc-frontend:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 80
