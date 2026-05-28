@@ -1,0 +1,118 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: culturearc-secrets
+type: Opaque
+stringData:
+  # Injection of your database & external service credentials
+  MONGO_URI: "mongodb+srv://mekapavan99:br70jQ9BdZNUBANF@culturearc.anc9kob.mongodb.net/culturearc?appName=CultureArc"
+  JWT_SECRET: "UWwCS2XPbgqJvkfe04ua"
+  CLOUDINARY_CLOUD_NAME: "dyt3pfpcc"
+  CLOUDINARY_API_KEY: "889911226476618"
+  CLOUDINARY_API_SECRET: "WbNXCktrl_6wJPuRRCiMo9O3qR0"
+  EMAIL_USER: "tabletoplpu@gmail.com"
+  EMAIL_PASS: "dwwo afmc hmir bbmw"
+  GOOGLE_GENERATIVE_AI_API_KEY: "AIzaSyAyuo8hVVcyg1_H7EcOcr1SOBHWeUH2CcU"
+
+---
+
+# Express Backend Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: culturearc-backend
+  labels:
+    app: culturearc-backend
+spec:
+  replicas: 1 # Simple single pod setup
+  selector:
+    matchLabels:
+      app: culturearc-backend
+  template:
+    metadata:
+      labels:
+        app: culturearc-backend
+    spec:
+      containers:
+      - name: backend
+        # REPLACE 'your-dockerhub-username' with your actual Docker Hub account name
+        image: your-dockerhub-username/culturearc-backend:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 5000
+        envFrom:
+        - secretRef:
+            name: culturearc-secrets
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+
+---
+
+# Express Backend LoadBalancer Service (Maps port 5000 to Host Port 5000)
+apiVersion: v1
+kind: Service
+metadata:
+  name: culturearc-backend-service
+spec:
+  selector:
+    app: culturearc-backend
+  ports:
+    - protocol: TCP
+      port: 5000
+      targetPort: 5000
+  type: LoadBalancer
+
+---
+
+# React Frontend Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: culturearc-frontend
+  labels:
+    app: culturearc-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: culturearc-frontend
+  template:
+    metadata:
+      labels:
+        app: culturearc-frontend
+    spec:
+      containers:
+      - name: frontend
+        # REPLACE 'your-dockerhub-username' with your actual Docker Hub account name
+        image: your-dockerhub-username/culturearc-frontend:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "50m"
+          limits:
+            memory: "256Mi"
+            cpu: "200m"
+
+---
+
+# React Frontend LoadBalancer Service (Maps port 80 to Host Port 80)
+apiVersion: v1
+kind: Service
+metadata:
+  name: culturearc-frontend-service
+spec:
+  selector:
+    app: culturearc-frontend
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: LoadBalancer

@@ -1,0 +1,11 @@
+global:
+  scrape_interval: 15s # How frequently to scrape metrics by default
+
+scrape_configs:
+  - job_name: 'culturearc-backend'
+    scrape_interval: 5s # Scrape backend metrics more frequently for immediate feedback
+    metrics_path: '/metrics'
+    static_configs:
+      # In local docker-compose: target backend service
+      # In K3s: Kubernetes handles discovery, or targets the service pod
+      - targets: ['backend:5000', 'localhost:5000']

@@ -1,29 +1,5 @@
 const nodemailer = require('nodemailer');
-
-// Create transporter based on environment configuration
-const createTransporter = () => {
-    // For Gmail
-    if (process.env.EMAIL_SERVICE === 'gmail') {
-        return nodemailer.createTransport({
-            service: 'gmail',
-            auth: {
-                user: process.env.EMAIL_USER,
-                pass: process.env.EMAIL_PASS // Use App Password for Gmail
-            }
-        });
-    }
-
-    // For custom SMTP
-    return nodemailer.createTransport({
-        host: process.env.EMAIL_HOST || 'smtp.gmail.com',
-        port: process.env.EMAIL_PORT || 587,
-        secure: process.env.EMAIL_SECURE === 'true',
-        auth: {
-            user: process.env.EMAIL_USER,
-            pass: process.env.EMAIL_PASS
-        }
-    });
-};
+const RESEND_EMAIL_ENDPOINT = 'https://api.resend.com/emails';
 
 /**
  * Send an email
@@ -35,32 +11,68 @@ const createTransporter = () => {
  */
 const sendEmail = async ({ to, subject, text, html }) => {
     try {
-        // Check if email is configured
-        if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
-            console.log('Email not configured. Would have sent:');
-            console.log({ to, subject, text });
-            return { success: true, message: 'Email logging only (not configured)' };
+        // 1. Check if standard SMTP Gmail is configured (highly reliable, sends to any recipient)
+        if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
+            const transporter = nodemailer.createTransport({
+                service: 'gmail',
+                auth: {
+                    user: process.env.EMAIL_USER.trim(),
+                    pass: process.env.EMAIL_PASS.trim()
+                }
+            });
+
+            const mailOptions = {
+                from: `"CultureArc" <${process.env.EMAIL_USER.trim()}>`,
+                to,
+                subject,
+                text,
+                html: html || text
+            };
+
+            const info = await transporter.sendMail(mailOptions);
+            console.log('Email sent successfully via Gmail SMTP:', info.messageId);
+            return { success: true, messageId: info.messageId };
         }
 
-        const transporter = createTransporter();
+        // 2. Fallback to Resend if RESEND_API_KEY is configured
+        if (process.env.RESEND_API_KEY) {
+            const mailOptions = {
+                from: process.env.RESEND_FROM_EMAIL || 'CultureArc <onboarding@resend.dev>',
+                to,
+                subject,
+                text,
+                html: html || text
+            };
 
-        const mailOptions = {
-            from: `"CultureArc" <${process.env.EMAIL_USER}>`,
-            to,
-            subject,
-            text,
-            html: html || text
-        };
+            const response = await fetch(RESEND_EMAIL_ENDPOINT, {
+                method: 'POST',
+                headers: {
+                    Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(mailOptions)
+            });
 
-        const info = await transporter.sendMail(mailOptions);
-        console.log('Email sent:', info.messageId);
-        return { success: true, messageId: info.messageId };
+            const result = await response.json();
+
+            if (!response.ok) {
+                const message = result?.message || result?.error || 'Failed to send email';
+                throw new Error(message);
+            }
+
+            console.log('Email sent via Resend:', result.id);
+            return { success: true, messageId: result.id };
+        }
+
+        // 3. Fallback to logging (simulation mode) if neither is configured
+        console.log('Email not configured. Would have sent:');
+        console.log({ to, subject, text });
+        return { success: true, messageId: 'simulation-only' };
     } catch (error) {
         console.error('Error sending email:', error);
         return { success: false, error: error.message };
     }
 };
-
 /**
  * Send verification email to new user
  */
