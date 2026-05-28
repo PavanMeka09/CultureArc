@@ -13,17 +13,6 @@ pipeline {
     }
 
     stages {
-        stage('Install Dependencies') {
-            steps {
-                echo 'Installing dependencies for tests & checks...'
-                dir('CultureArc-backend') {
-                    sh 'npm install'
-                }
-                dir('CultureArc-frontend') {
-                    sh 'npm install'
-                }
-            }
-        }
 
         stage('Docker Build') {
             steps {
