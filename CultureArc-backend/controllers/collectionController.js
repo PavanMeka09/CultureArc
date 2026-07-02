@@ -62,7 +62,7 @@ const updateCollection = asyncHandler(async (req, res) => {
 
     // Check ownership
     if (collection.user.toString() !== req.user._id.toString() && !req.user.isAdmin) {
-        res.status(401);
+        res.status(403);
         throw new Error('Not authorized to update this collection');
     }
 
@@ -88,7 +88,7 @@ const deleteCollection = asyncHandler(async (req, res) => {
 
     // Check ownership
     if (collection.user.toString() !== req.user._id.toString() && !req.user.isAdmin) {
-        res.status(401);
+        res.status(403);
         throw new Error('Not authorized to delete this collection');
     }
 
@@ -106,7 +106,7 @@ const addArtifactToCollection = asyncHandler(async (req, res) => {
     if (collection) {
         // Check ownership
         if (collection.user.toString() !== req.user._id.toString()) {
-            res.status(401);
+            res.status(403);
             throw new Error('Not authorized to update this collection');
         }
 
@@ -138,7 +138,7 @@ const removeArtifactFromCollection = asyncHandler(async (req, res) => {
 
     // Check ownership
     if (collection.user.toString() !== req.user._id.toString() && !req.user.isAdmin) {
-        res.status(401);
+        res.status(403);
         throw new Error('Not authorized to update this collection');
     }
 

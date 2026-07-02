@@ -51,29 +51,33 @@ const initiateSignup = asyncHandler(async (req, res) => {
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
     const otpExpires = Date.now() + 15 * 60 * 1000; // 15 minutes
 
+    // Send OTP email first (before hashing so the user gets the plain text OTP)
+    const emailResult = await sendOtpEmail(email, otp);
+
+    if (!emailResult.success) {
+        res.status(500);
+        throw new Error(`Failed to send OTP: ${emailResult.error || 'Unknown email error'}`);
+    }
+
+    // Hash the plain OTP for secure storage
+    const salt = await bcrypt.genSalt(10);
+    const hashedOtp = await bcrypt.hash(otp, salt);
+
     // Check for existing pending user and update, or create new
     let pendingUser = await PendingUser.findOne({ email });
 
     if (pendingUser) {
         pendingUser.name = name;
-        pendingUser.otp = otp;
+        pendingUser.otp = hashedOtp;
         pendingUser.otpExpires = otpExpires;
         await pendingUser.save();
     } else {
         pendingUser = await PendingUser.create({
             name,
             email,
-            otp,
+            otp: hashedOtp,
             otpExpires
         });
-    }
-
-    // Send OTP email
-    const emailResult = await sendOtpEmail(email, otp);
-
-    if (!emailResult.success) {
-        res.status(500);
-        throw new Error(`Failed to send OTP: ${emailResult.error || 'Unknown email error'}`);
     }
 
     res.status(200).json({
@@ -90,11 +94,10 @@ const verifySignupOtp = asyncHandler(async (req, res) => {
 
     const pendingUser = await PendingUser.findOne({
         email,
-        otp,
         otpExpires: { $gt: Date.now() }
     });
 
-    if (!pendingUser) {
+    if (!pendingUser || !(await bcrypt.compare(otp, pendingUser.otp))) {
         res.status(400);
         throw new Error('Invalid or expired OTP');
     }
@@ -242,13 +245,16 @@ const forgotPassword = asyncHandler(async (req, res) => {
     // Generate 6 digit OTP
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
-    // Store OTP in reset token field (reusing existing fields)
-    user.resetPasswordToken = otp;
-    user.resetPasswordExpire = Date.now() + 15 * 60 * 1000; // 15 minutes
-    await user.save();
-
     // Send password reset OTP email
     await sendPasswordResetOtpEmail(email, otp);
+
+    const salt = await bcrypt.genSalt(10);
+    const hashedOtp = await bcrypt.hash(otp, salt);
+
+    // Store OTP in reset token field (reusing existing fields)
+    user.resetPasswordToken = hashedOtp;
+    user.resetPasswordExpire = Date.now() + 15 * 60 * 1000; // 15 minutes
+    await user.save();
 
     res.json({
         message: 'Password reset code sent to your email.'
@@ -263,11 +269,10 @@ const verifyResetOtp = asyncHandler(async (req, res) => {
 
     const user = await User.findOne({
         email,
-        resetPasswordToken: otp,
         resetPasswordExpire: { $gt: Date.now() }
     });
 
-    if (!user) {
+    if (!user || !(await bcrypt.compare(otp, user.resetPasswordToken))) {
         res.status(400);
         throw new Error('Invalid or expired reset code');
     }

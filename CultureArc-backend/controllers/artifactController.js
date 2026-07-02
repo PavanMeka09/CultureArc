@@ -217,7 +217,7 @@ const updateArtifact = asyncHandler(async (req, res) => {
 
     if (artifact) {
         if (artifact.user.toString() !== req.user._id.toString() && !req.user.isAdmin) {
-            res.status(401);
+            res.status(403);
             throw new Error('Not authorized to update this artifact');
         }
 
@@ -244,7 +244,7 @@ const deleteArtifact = asyncHandler(async (req, res) => {
 
     if (artifact) {
         if (artifact.user.toString() !== req.user._id.toString() && !req.user.isAdmin) {
-            res.status(401);
+            res.status(403);
             throw new Error('Not authorized to delete this artifact');
         }
 
@@ -326,7 +326,7 @@ const updateComment = asyncHandler(async (req, res) => {
 
     // Check if user owns the comment
     if (comment.user.toString() !== req.user._id.toString() && !req.user.isAdmin) {
-        res.status(401);
+        res.status(403);
         throw new Error('Not authorized to edit this comment');
     }
 
@@ -354,7 +354,7 @@ const deleteComment = asyncHandler(async (req, res) => {
 
     // Check if user owns the comment or is admin
     if (comment.user.toString() !== req.user._id.toString() && !req.user.isAdmin) {
-        res.status(401);
+        res.status(403);
         throw new Error('Not authorized to delete this comment');
     }
 
