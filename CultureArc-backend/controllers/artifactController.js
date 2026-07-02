@@ -1,5 +1,70 @@
 const asyncHandler = require('express-async-handler');
 const Artifact = require('../models/Artifact');
+const { google } = require('@ai-sdk/google');
+const { generateObject } = require('ai');
+const { z } = require('zod');
+
+// Zod schema for automated content moderation
+const moderationSchema = z.object({
+    isAppropriate: z.boolean().describe('Whether the artifact is appropriate for the museum (not offensive, not spam, not a meme, actually a historical/cultural object).'),
+    confidence: z.number().min(0).max(100).describe('Confidence score from 0 to 100 in this decision.'),
+    reason: z.string().describe('Explanation of the evaluation decision, noting any issues if inappropriate.'),
+});
+
+/**
+ * Moderates artifact content using Google Gemini model
+ * @param {Object} artifactData - Artifact data to review
+ */
+const reviewArtifactContent = async (artifactData) => {
+    const prompt = `
+      You are an automated content moderation AI for a digital cultural museum.
+      Review the following artifact submission details and determine if it is appropriate for inclusion:
+      
+      Title: ${artifactData.title}
+      Description: ${artifactData.description}
+      Category: ${artifactData.category}
+      Era: ${artifactData.era}
+      Region: ${artifactData.region}
+      
+      Your goal is to reject offensive content, spam, clear memes, or non-cultural objects. Replicas and historical reconstructions are allowed as long as they are contextually appropriate.
+    `;
+
+    const { object } = await generateObject({
+        model: google('gemini-flash-latest'),
+        schema: moderationSchema,
+        messages: [
+            {
+                role: 'user',
+                content: [
+                    { type: 'text', text: prompt },
+                    { type: 'image', image: new URL(artifactData.imageUrl) },
+                ],
+            },
+        ],
+    });
+
+    return {
+        isAppropriate: object.isAppropriate,
+        confidence: object.confidence,
+        reason: object.reason,
+        reviewedAt: new Date()
+    };
+};
+
+/**
+ * Determine the status of the artifact based on the AI moderation review
+ * @param {Object} aiReview - AI review results
+ * @returns {string} Status ('approved', 'rejected', or 'pending')
+ */
+const determineStatus = (aiReview) => {
+    if (aiReview.isAppropriate && aiReview.confidence >= 70) {
+        return 'approved';
+    } else if (!aiReview.isAppropriate && aiReview.confidence >= 80) {
+        return 'rejected';
+    }
+    return 'pending'; // Requires human manual review
+};
+
 
 // @desc    Fetch all artifacts with optional filters
 // @route   GET /api/artifacts
@@ -93,7 +158,7 @@ const createArtifact = asyncHandler(async (req, res) => {
     };
 
     // Perform AI review if API key is configured
-    if (process.env.GOOGLE_API_KEY) {
+    if (process.env.GOOGLE_GENERATIVE_AI_API_KEY) {
         try {
             const aiReview = await reviewArtifactContent(artifactData);
             artifactData.aiReview = aiReview;

@@ -5,14 +5,14 @@ metadata:
 type: Opaque
 stringData:
   # Injection of your database & external service credentials
-  MONGO_URI: "mongodb+srv://mekapavan99:br70jQ9BdZNUBANF@culturearc.anc9kob.mongodb.net/culturearc?appName=CultureArc"
-  JWT_SECRET: "UWwCS2XPbgqJvkfe04ua"
-  CLOUDINARY_CLOUD_NAME: "dyt3pfpcc"
-  CLOUDINARY_API_KEY: "889911226476618"
-  CLOUDINARY_API_SECRET: "WbNXCktrl_6wJPuRRCiMo9O3qR0"
-  EMAIL_USER: "tabletoplpu@gmail.com"
-  EMAIL_PASS: "dwwo afmc hmir bbmw"
-  GOOGLE_GENERATIVE_AI_API_KEY: "AIzaSyAyuo8hVVcyg1_H7EcOcr1SOBHWeUH2CcU"
+  MONGO_URI: "YOUR_MONGO_URI_HERE"
+  JWT_SECRET: "YOUR_JWT_SECRET_HERE"
+  CLOUDINARY_CLOUD_NAME: "YOUR_CLOUDINARY_CLOUD_NAME_HERE"
+  CLOUDINARY_API_KEY: "YOUR_CLOUDINARY_API_KEY_HERE"
+  CLOUDINARY_API_SECRET: "YOUR_CLOUDINARY_API_SECRET_HERE"
+  EMAIL_USER: "YOUR_EMAIL_USER_HERE"
+  EMAIL_PASS: "YOUR_EMAIL_PASS_HERE"
+  GOOGLE_GENERATIVE_AI_API_KEY: "YOUR_GOOGLE_GENERATIVE_AI_API_KEY_HERE"
 
 ---
 
@@ -35,7 +35,6 @@ spec:
     spec:
       containers:
       - name: backend
-        # REPLACE 'your-dockerhub-username' with your actual Docker Hub account name
         image: pavanmeka09/culturearc-backend:latest
         imagePullPolicy: Always
         ports:
@@ -88,7 +87,6 @@ spec:
     spec:
       containers:
       - name: frontend
-        # REPLACE 'your-dockerhub-username' with your actual Docker Hub account name
         image: pavanmeka09/culturearc-frontend:latest
         imagePullPolicy: Always
         ports:

@@ -2,7 +2,6 @@ const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
 const connectDB = require('./config/db');
-const { client, httpRequestDurationSeconds } = require('./utils/monitor');
 
 dotenv.config();
 
@@ -10,35 +9,10 @@ connectDB();
 
 const app = express();
 
-// Middleware to capture request duration metrics
-app.use((req, res, next) => {
-    const start = process.hrtime();
-    res.on('finish', () => {
-        const duration = process.hrtime(start);
-        const durationInSeconds = duration[0] + duration[1] / 1e9;
-        
-        // Exclude scraping metrics route from logs
-        if (req.route && req.route.path !== '/metrics') {
-            httpRequestDurationSeconds
-                .labels(req.method, req.route.path, res.statusCode)
-                .observe(durationInSeconds);
-        }
-    });
-    next();
-});
 
 app.use(express.json());
 app.use(cors());
 
-// Prometheus Metrics Scrape Endpoint
-app.get('/metrics', async (req, res) => {
-    try {
-        res.set('Content-Type', client.register.contentType);
-        res.end(await client.register.metrics());
-    } catch (err) {
-        res.status(500).end(err);
-    }
-});
 
 app.use('/api/artifacts', require('./routes/artifactRoutes'));
 app.use('/api/collections', require('./routes/collectionRoutes'));

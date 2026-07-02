@@ -28,13 +28,17 @@ function App() {
             <Route path="/" element={<HomePage />} />
 
             <Route path="/explore" element={<ExplorePage />} />
-            {/* Protected Routes */}
+            {/* Protected User Routes */}
             <Route element={<PrivateRoute />}>
               <Route path="/collections" element={<CollectionsPage />} />
               <Route path="/collection/:id" element={<CollectionDetailPage />} />
               <Route path="/upload" element={<ArtifactUploadPage />} />
               <Route path="/edit-artifact/:id" element={<ArtifactUploadPage />} />
               <Route path="/profile" element={<ProfilePage />} />
+            </Route>
+
+            {/* Protected Admin Routes */}
+            <Route element={<PrivateRoute requireAdmin />}>
               <Route path="/admin" element={<AdminPage />} />
             </Route>
 
