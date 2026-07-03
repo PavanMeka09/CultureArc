@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import React, { createContext, useState, useEffect } from 'react';
 
 export const ThemeContext = createContext();
@@ -31,13 +32,10 @@ export const ThemeProvider = ({ children }) => {
         localStorage.setItem('color-theme', rawTheme);
     };
 
-    if (getInitialTheme) {
-        rawSetTheme(theme);
-    }
-
     useEffect(() => {
         rawSetTheme(theme);
     }, [theme]);
+
 
     const toggleTheme = () => {
         setTheme((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light'));

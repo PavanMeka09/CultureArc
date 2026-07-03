@@ -14,7 +14,6 @@ const AdminPage = () => {
     const [users, setUsers] = useState([]);
     const [artifacts, setArtifacts] = useState([]);
     const [collections, setCollections] = useState([]);
-    const [loading, setLoading] = useState(true);
 
     // User Edit Modal
     const [editingUser, setEditingUser] = useState(null);
@@ -39,7 +38,6 @@ const AdminPage = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            setLoading(true);
             try {
                 if (activeTab === 'stats' || activeTab === 'users') {
                     const { data } = await api.get('/users');
@@ -56,7 +54,7 @@ const AdminPage = () => {
                     try {
                         const pendingRes = await api.get('/artifacts/pending-count');
                         setPendingCount(pendingRes.data.count || 0);
-                    } catch (e) {
+                    } catch {
                         // Silent failure for pending count
                     }
                 }
@@ -66,8 +64,6 @@ const AdminPage = () => {
                 }
             } catch (err) {
                 console.error('Failed to fetch admin data', err);
-            } finally {
-                setLoading(false);
             }
         };
         fetchData();

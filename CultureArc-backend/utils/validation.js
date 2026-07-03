@@ -175,13 +175,11 @@ const addArtifactToCollectionSchema = z.object({
 
 module.exports = {
     // User schemas
-    // User schemas
     loginSchema,
     changePasswordSchema,
     forgotPasswordSchema,
     resetPasswordSchema,
 
-    adminUpdateUserSchema,
     adminUpdateUserSchema,
     // Artifact schemas
     artifactSchema,
@@ -197,3 +195,4 @@ module.exports = {
     verifyOtpSchema,
     completeSignupSchema
 };
+

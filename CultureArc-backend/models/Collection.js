@@ -25,6 +25,10 @@ const collectionSchema = mongoose.Schema(
             required: true,
             ref: 'User',
         },
+        isPrivate: {
+            type: Boolean,
+            default: false,
+        },
     },
     {
         timestamps: true,

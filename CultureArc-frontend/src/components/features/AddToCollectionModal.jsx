@@ -51,7 +51,7 @@ const AddToCollectionModal = ({ isOpen, onClose, artifactId }) => {
                 setView('list');
                 setMessage({ type: 'success', text: 'Collection created successfully!' });
             }
-        } catch (error) {
+        } catch {
             setMessage({ type: 'error', text: 'Failed to create collection.' });
         } finally {
             setLoading(false);
